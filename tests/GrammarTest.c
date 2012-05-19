@@ -38,7 +38,7 @@ void basicTest(){
 	/*S->aA*/
 	ProductionADT p1 = newProduction('S','a','A');
 	/*A-> b*/
-	ProductionADT p2 = newProduction('A',' ','b');
+	ProductionADT p2 = newProduction('A','/','b');
 
 	ProductionsADT prods = newProductions(2);
 	setProduction(prods,0,p1);

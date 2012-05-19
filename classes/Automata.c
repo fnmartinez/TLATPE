@@ -88,3 +88,47 @@ void printAutomata(AutomataADT automata){
 		printProductions(getDerivations(automata));
 		return;
 }
+int lenght(char * array){
+	int i;
+	int ans=0;
+	for(i=0;array[i]!= '\0';i++){
+			ans++;
+	}
+	return ans;
+}
+
+/*Conversion*/
+GrammarADT toGrammar(AutomataADT automata){
+	GrammarADT g = newGrammar();
+	char * states = getStates(automata);
+	setNonTerminals(g,states);
+	char * symbols = getSymbols(automata);
+	setTerminals(g, symbols);
+	char ini = getInitialstate(automata);
+	setDistinguished(g,ini);
+	ProductionsADT derivations = getDerivations(automata);
+	int n = getQuant(derivations);
+	int quantFinals = lenght(getFinalStates(automata));
+	int i;
+	ProductionADT derv;
+	ProductionsADT prods = newProductions(n);
+	ProductionADT prod[n+quantFinals];
+	for (i=0; i<n; i++){
+		derv = getProduction(derivations,i);
+		setComponent(prod[i],0,getComponent(derv,0));
+		setComponent(prod[i],1,getComponent(derv,1));
+		setComponent(prod[i],2,getComponent(derv,2));
+		setProduction(prods,i,prod[i]);
+	}
+	/*if P is in F , the production P->/ should be included*/
+	for(; i<quantFinals; i++){
+		setComponent(prod[i],0,getFinalStates(automata)[i-n]);
+		setComponent(prod[i],1,'/');
+		setComponent(prod[i],2,'/');
+	}
+	setProductions(g,prods);
+
+	return g;
+}
+
+

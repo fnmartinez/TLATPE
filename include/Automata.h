@@ -9,6 +9,7 @@
 #define AUTOMATA_H_
 
 #include "Productions.h"
+#include "Grammar.h"
 
 typedef struct Automata * AutomataADT;
 
@@ -32,6 +33,10 @@ void setDerivations(AutomataADT automata,ProductionsADT  derivations);
 
 /*Utility*/
 void printAutomata(AutomataADT automata);
+int lenght(char * array);
+
+/*Conversion*/
+GrammarADT toGrammar(AutomataADT automata);
 
 
 #endif /* AUTOMATA_H_ */
