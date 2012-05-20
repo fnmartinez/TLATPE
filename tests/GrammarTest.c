@@ -29,11 +29,11 @@ void basicTest(){
 	term[0] = 'S';
 	term[1] = 'A';
 	term[2] = 'B';
-	setTerminals(g1,term);
+	setTerminals(g1,term,3);
 	char * nonterm = malloc(sizeof(char)*2);
 	nonterm[0] = 'a';
 	nonterm[1] = 'b';
-	setNonTerminals(g1,nonterm);
+	setNonTerminals(g1,nonterm,2);
 
 	/*S->aA*/
 	ProductionADT p1 = newProduction('S','a','A');

@@ -21,10 +21,12 @@ char * getTerminals(GrammarADT grammar);
 char * getNonTerminals(GrammarADT grammar);
 char getDistinguished(GrammarADT grammar);
 ProductionsADT  getProductions(GrammarADT grammar);
+int getQuantTerminals(GrammarADT grammar);
+int getQuantNonTerminals(GrammarADT grammar);
 
 /*Setters*/
-void setTerminals(GrammarADT grammar, char * terminals);
-void setNonTerminals(GrammarADT grammar, char * nonterminals);
+void setTerminals(GrammarADT grammar, char * terminals, int quant);
+void setNonTerminals(GrammarADT grammar, char * nonterminals, int quant);
 void setDistinguished(GrammarADT grammar, char distinguished);
 void setProductions(GrammarADT grammar,ProductionsADT productions);
 

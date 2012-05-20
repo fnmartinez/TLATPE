@@ -10,7 +10,7 @@
 # include "../include/Production.h"
 
 typedef struct Production{
-	char production[3];
+	char production[PRODSIZE];
 }Production;
 
 /*Constructor-destructor*/
@@ -27,7 +27,7 @@ void freeProduction(ProductionADT p){
 
 /*Getters*/
 char getComponent(ProductionADT p, int i){
-	if(i < 0 ||i > 3){
+	if(i < 0 ||i > 2){
 		return -1;
 	}
 	return p->production[i];
@@ -41,6 +41,6 @@ void setComponent(ProductionADT p, int i, char comp){
 
 /*Utility*/
 void printProduction(ProductionADT p, int i){
-	printf("%c -> %c%c\n", p->production[0],p->production[1],p->production[2]);
+	printf("\t %c -> %c%c\n", p->production[0],p->production[1],p->production[2]);
 	return;
 }

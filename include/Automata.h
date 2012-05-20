@@ -23,11 +23,14 @@ char * getSymbols(AutomataADT automata);
 char * getFinalStates(AutomataADT automata);
 char getInitialstate(AutomataADT automata);
 ProductionsADT getDerivations(AutomataADT automata);
+int getQuantStates(AutomataADT automata);
+int getQuantSymbols(AutomataADT automata);
+int getQuantFinalStates(AutomataADT automata);
 
 /*Setters*/
-void setStates(AutomataADT automata, char * states);
-void setSymbols(AutomataADT automata, char * symbols);
-void setFinalStates(AutomataADT automata, char * finalstates);
+void setStates(AutomataADT automata, char * states, int quant);
+void setSymbols(AutomataADT automata, char * symbols, int quant);
+void setFinalStates(AutomataADT automata, char * finalstates, int quant);
 void setInitialstate(AutomataADT automata, char initialState);
 void setDerivations(AutomataADT automata,ProductionsADT  derivations);
 

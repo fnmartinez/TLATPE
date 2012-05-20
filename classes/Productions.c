@@ -17,7 +17,7 @@ typedef struct Productions{
 
 /*Constructor-destructor*/
 ProductionsADT newProductions(int n){
-	ProductionsADT p = malloc(sizeof(ProductionsADT*));
+	ProductionsADT p = malloc(sizeof(ProductionsADT));
 	p->productions = malloc(sizeof(ProductionADT)*n);
 	p->n = n;
 	return p;
@@ -37,7 +37,8 @@ ProductionADT getProduction(ProductionsADT productions, int i){
 
 /*Setters*/
 void setProduction(ProductionsADT productions, int i, ProductionADT pr){
-	productions->productions[i] = pr;
+	productions->productions[i] = malloc(sizeof(ProductionADT));
+	memcpy(productions->productions[i], pr, sizeof(ProductionADT) );
 }
 
 /*Utility*/

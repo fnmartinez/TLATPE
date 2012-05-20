@@ -8,8 +8,10 @@
 #ifndef PRODUCTION_H_
 #define PRODUCTION_H_
 
+# define PRODSIZE 3
 
 typedef struct Production * ProductionADT;
+
 
 /*Constructor-destructor*/
 ProductionADT newProduction(char first, char sec, char third);

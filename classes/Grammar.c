@@ -15,6 +15,8 @@
 typedef struct Grammar{
 	char * terminals;
 	char * nonterminals;
+	int quantterminals;
+	int quantnonterminals;
 	char distinguished;
 	ProductionsADT productions;
 }Grammar;
@@ -44,13 +46,23 @@ char getDistinguished(GrammarADT grammar){
 ProductionsADT  getProductions(GrammarADT grammar){
 	return grammar->productions;
 }
+int getQuantTerminals(GrammarADT grammar){
+	return grammar->quantterminals;
+}
+int getQuantNonTerminals(GrammarADT grammar){
+	return grammar->quantnonterminals;
+}
 
 /*Setters*/
-void setTerminals(GrammarADT grammar, char * terminals){
-	grammar->terminals = terminals;
+void setTerminals(GrammarADT grammar, char * terminals, int quant){
+	grammar->terminals = malloc(sizeof(char)*quant);
+	memcpy(grammar->terminals, terminals, quant);
+	grammar->quantterminals = quant;
 }
-void setNonTerminals(GrammarADT grammar, char * nonterminals){
-	grammar->nonterminals = nonterminals;
+void setNonTerminals(GrammarADT grammar, char * nonterminals, int quant){
+	grammar->nonterminals = malloc(sizeof(char)*quant);
+	memcpy(grammar->nonterminals,nonterminals, quant);
+	grammar->quantnonterminals = quant;
 }
 void setDistinguished(GrammarADT grammar, char distinguished){
 	grammar->distinguished = distinguished;
@@ -66,12 +78,12 @@ void printGrammar(GrammarADT grammar){
 	printf("Distinguished: %c \n",getDistinguished(grammar));
 	int i ;
 	printf("Terminals: {");
-	for(i=0; getTerminals(grammar)[i]!= '\0';i++){
+	for(i=0;i < getQuantTerminals(grammar);i++){
 		printf(" %c ",getTerminals(grammar)[i]);
 	}
 	printf("}\n");
 	printf("Non Terminals: {");
-	for(i=0;getNonTerminals(grammar)[i]!= '\0';i++){
+	for(i=0;i < getQuantNonTerminals(grammar);i++){
 		printf(" %c ",getNonTerminals(grammar)[i]);
 	}
 	printf("}\n");
