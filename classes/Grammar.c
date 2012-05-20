@@ -6,6 +6,7 @@
  */
 
 # include <stdio.h>
+# include <string.h>
 # include <stdlib.h>
 # include "../include/Grammar.h"
 # include "../include/Productions.h"
