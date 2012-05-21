@@ -52,17 +52,17 @@ void printNodes(){
 start_new_node ^node\[shape=
 notfinal "circle\] Node"
 rankdir "rankdir = \"LR\";"
-start [.]*digraph\{\n
+start [.]*digraph\{[\r\n]
 end \}
 final "doublecircle\] Node"
-word [^ \t\n]+
-letter [^ \t\n]
+word [^ \t\r\n]+
+letter [^ \t\r\n]
 node_label " [label=\""
-line_end "\"];\n"
+line_end "\"];"[\r\n]
 label [a-z|A-Z|0-9]+
 lambda \\\\
 enter \n
-comment "//"[^\n]*\n
+comment "//"[^\n]*[\r\n]
 first_trans_node "Node"
 second_trans_node "->Node"
 %%
