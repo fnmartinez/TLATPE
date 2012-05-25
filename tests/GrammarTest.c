@@ -63,7 +63,7 @@ void destroy(){
 	freeProduction(p1);
 	freeProduction(p2);
 	freeProductions(prods);
-	/*freeGrammar(g1);*/
+	freeGrammar(g1);
 }
 
 void basicTest(){
