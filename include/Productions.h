@@ -17,7 +17,7 @@ ProductionsADT newProductions(int n);
 void freeProductions(ProductionsADT productions);
 
 /*Getters*/
-char getQuant(ProductionsADT productions);
+int getQuant(ProductionsADT productions);
 ProductionADT getProduction(ProductionsADT productions, int i);
 
 /*Setters*/
@@ -25,6 +25,9 @@ void setProduction(ProductionsADT productions, int i, ProductionADT pr);
 
 /*Utility*/
 void printProductions(ProductionsADT productions);
-
+void removeProduction(ProductionsADT productions, char rightsymbol);
+int in(ProductionsADT productions, ProductionADT new);
+void addProduction(ProductionsADT productions, ProductionADT new);
+int inCurrentProductions(ProductionsADT productions, char c);
 
 #endif /* PRODUCTIONS_H_ */

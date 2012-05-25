@@ -18,7 +18,7 @@ typedef struct Derivations{
 /*Constructor-destructor*/
 DerivationsADT newDerivations(int n){
 	DerivationsADT p = (DerivationsADT)calloc(1, sizeof(struct Derivations));
-	p->derivations = calloc(n,sizeof(struct Derivations));
+	p->derivations = calloc(n,sizeof( DerivationsADT));
 	p->n = n;
 	return p;
 }

@@ -35,9 +35,9 @@ AutomataADT newAutomata(void){
 }
 void freeAutomata(AutomataADT  automata){
 	free(automata->finalstates);
-	/*free(automata->states);
+	free(automata->states);
 	free(automata->symbols);
-	free(automata);*/
+	free(automata);
 }
 
 /*Getters*/
