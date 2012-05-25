@@ -9,8 +9,9 @@
 #define DERIVATIONS_H_
 
 # include "Derivation.h"
+# include "TADs.h"
 
-typedef struct Derivations * DerivationsADT;
+
 
 /*Constructor-destructor*/
 DerivationsADT newDerivations(int n);

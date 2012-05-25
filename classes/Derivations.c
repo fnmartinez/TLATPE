@@ -41,8 +41,8 @@ DerivationADT getDerivation(DerivationsADT derivations, int i){
 }
 
 /*Setters*/
-void setDerivation(DerivationsADT derivations, int i, DerivationADT pr){
-	derivations->derivations[i] = pr;
+void setDerivation(DerivationsADT derivations, int i, DerivationADT derivation){
+	derivations->derivations[i] = derivation;
 }
 
 /*Utility*/

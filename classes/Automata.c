@@ -135,7 +135,6 @@ GrammarADT toGrammar(AutomataADT automata){
 		setProduction(prods,i,newProduction(getFinalStates(automata)[i-n],'/','/'));
 	}
 	setProductions(g,prods);
-
 	return g;
 }
 

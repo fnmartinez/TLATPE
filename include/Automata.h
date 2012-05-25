@@ -10,8 +10,7 @@
 
 #include "Derivations.h"
 #include "Grammar.h"
-
-typedef struct Automata * AutomataADT;
+#include "TADS.h"
 
 /*Constructor-destructor*/
 AutomataADT newAutomata(void);

@@ -14,6 +14,7 @@
 
 typedef struct Production * ProductionADT;
 
+
 /*Constructor-destructor*/
 ProductionADT newProduction(char first, char sec, char third);
 ProductionADT newEmptyProduction();
