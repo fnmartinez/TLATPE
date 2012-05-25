@@ -28,6 +28,7 @@ void setProductionComponent(ProductionADT p, int i, char comp);
 
 /*Utility*/
 void printProduction(ProductionADT p, int i);
+int equals(ProductionADT p1, ProductionADT p2);
 
 /*Conversion*/
 /*DerivationADT toDerivation(ProductionADT p);*/

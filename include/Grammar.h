@@ -33,6 +33,7 @@ void setProductions(GrammarADT grammar,ProductionsADT productions);
 
 /*Utility*/
 void printGrammar(GrammarADT grammar);
+void removeUnreachableProductions(GrammarADT grammar);
 
 /*Conversion*/
 AutomataADT toAutomata(GrammarADT grammar);
