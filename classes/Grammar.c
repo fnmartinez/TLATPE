@@ -9,23 +9,31 @@
 # include <string.h>
 # include <stdlib.h>
 # include "../include/Grammar.h"
+# include "../include/Automata.h"
 # include "../include/Productions.h"
 # include "../include/Production.h"
+# include "../include/Derivations.h"
+# include "../include/Derivation.h"
+# include "../include/TADs.h"
+
 
 
 typedef struct Grammar{
+	ProductionsADT productions;
 	char * terminals;
 	char * nonterminals;
 	int quantterminals;
 	int quantnonterminals;
 	char distinguished;
-	ProductionsADT productions;
 }Grammar;
+
+DerivationADT toDerivation(ProductionADT p);
+
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void){
 	GrammarADT grammar;
-	grammar = malloc(sizeof(GrammarADT));
+	grammar = malloc(sizeof(struct Grammar));
 	return grammar;
 }
 void freeGrammar(GrammarADT grammar){
@@ -91,3 +99,35 @@ void printGrammar(GrammarADT grammar){
 	printProductions(getProductions(grammar));
 	return;
 }
+
+AutomataADT toAutomata(GrammarADT grammar){
+	AutomataADT a = newAutomata();
+	setSymbols(a, getTerminals(grammar), getQuantTerminals(grammar));
+	setStates(a, getNonTerminals(grammar), getQuantNonTerminals(grammar));
+	setInitialstate(a, getDistinguished(grammar));
+	ProductionsADT productions = getProductions(grammar);
+	int n = getQuant(productions);
+	int finalstatesquant = 0;
+	char * finalstates = malloc(sizeof(char));
+	int i,derivationquant=0;
+	for(i=0; i<n; i++){
+		if ( getProductionComponent(getProduction(productions,i),1) == '/' &&
+				 getProductionComponent(getProduction(productions,i),2) == '/' ){
+			if ( realloc(finalstates,sizeof(char)*(finalstatesquant+1)) == NULL ){
+				  fprintf(stderr, "Not enough space for finalstates\n");
+			}
+			finalstates[finalstatesquant++] = getProductionComponent(getProduction(productions,i),0);
+		}
+	}
+	setFinalStates(a, finalstates, finalstatesquant);
+	DerivationsADT derivations = newDerivations(n-finalstatesquant);
+	for(i=0; i<n; i++){
+		if ( getProductionComponent(getProduction(productions,i),1) != '/' ||
+						 getProductionComponent(getProduction(productions,i),2) != '/' ){
+			setDerivation(derivations,derivationquant++, (DerivationADT) toDerivation( getProduction(productions,i) ) );
+		}
+	}
+	setDerivations(a,derivations);
+	return a;
+}
+

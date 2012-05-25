@@ -11,46 +11,69 @@
 # include "../include/Production.h"
 
 
+void init();
+void destroy();
 void basicTest();
+void grammarToAutomata();
+ProductionsADT prods;
+
+GrammarADT g1;
+char * term;
+char * nonterm;
+ProductionADT p1;
+ProductionADT p2;
 
 int main(void)
 {
+	init();
 	basicTest();
+	grammarToAutomata();
+	destroy();
 	return 0;
 }
 
-
-void basicTest(){
-
-	printf("Testing Grammar Structures / Basic \n");
-	GrammarADT g1 = newGrammar();
+void init(){
+	g1 = newGrammar();
 	setDistinguished(g1, 'S');
-	char * term = malloc(sizeof(char)*3);
+	term = malloc(sizeof(char)*3);
 	term[0] = 'S';
 	term[1] = 'A';
 	term[2] = 'B';
 	setTerminals(g1,term,3);
-	char * nonterm = malloc(sizeof(char)*2);
+	nonterm = malloc(sizeof(char)*2);
 	nonterm[0] = 'a';
 	nonterm[1] = 'b';
 	setNonTerminals(g1,nonterm,2);
 
 	/*S->aA*/
-	ProductionADT p1 = newProduction('S','a','A');
+	p1 = newProduction('S','a','A');
 	/*A-> b*/
-	ProductionADT p2 = newProduction('A','/','b');
+	p2 = newProduction('A','/','b');
 
-	ProductionsADT prods = newProductions(2);
+	prods = newProductions(2);
 	setProduction(prods,0,p1);
 	setProduction(prods,1,p2);
 
 	setProductions(g1,prods);
+}
 
-	printGrammar(g1);
-
+void destroy(){
+	free(term);
+	free(nonterm);
 	freeProduction(p1);
 	freeProduction(p2);
 	freeProductions(prods);
 	/*freeGrammar(g1);*/
-
 }
+
+void basicTest(){
+	printf("Testing Grammar Structures / Basic \n");
+	printGrammar(g1);
+}
+
+void grammarToAutomata(){
+	printf("\nTesting Grammar to Automata Conversion  \n");
+	AutomataADT a = toAutomata(g1);
+	printAutomata(a);
+}
+

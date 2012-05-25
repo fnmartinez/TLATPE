@@ -9,8 +9,8 @@
 #define PRODUCTIONS_H_
 
 # include "Production.h"
+# include "TADs.h"
 
-typedef struct Productions * ProductionsADT;
 
 /*Constructor-destructor*/
 ProductionsADT newProductions(int n);

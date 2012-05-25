@@ -9,11 +9,13 @@
 # include <string.h>
 # include <stdlib.h>
 # include "../include/Automata.h"
-# include "../include/Productions.h"
 # include "../include/Production.h"
+# include "../include/Productions.h"
+# include "../include/Derivation.h"
+# include "../include/Derivations.h"
 
 typedef struct Automata{
-	ProductionsADT derivations;
+	DerivationsADT derivations;
 	char initialstate;
 	char * states;
 	char * finalstates;
@@ -23,9 +25,12 @@ typedef struct Automata{
 	int quantfinalstates;
 }Automata;
 
+ProductionADT toProduction(DerivationADT d);
+
+
 /*Constructor-destructor*/
 AutomataADT newAutomata(void){
-	AutomataADT a = (AutomataADT)malloc(sizeof(AutomataADT));
+	AutomataADT a = (AutomataADT)malloc(sizeof(struct Automata));
 	return a;
 }
 void freeAutomata(AutomataADT  automata){
@@ -49,7 +54,8 @@ char * getFinalStates(AutomataADT automata){
 char getInitialstate(AutomataADT automata){
 	return automata->initialstate;
 }
-ProductionsADT getDerivations(AutomataADT automata){
+/*DerivationsADT getDerivations(AutomataADT automata){*/
+DerivationsADT getDerivations(AutomataADT automata){
 	return automata->derivations;
 }
 int getQuantStates(AutomataADT automata){
@@ -81,9 +87,10 @@ void setFinalStates(AutomataADT automata, char * finalstates, int quant){
 void setInitialstate(AutomataADT automata, char initialState){
 	automata->initialstate = initialState;
 }
-void setDerivations(AutomataADT automata,ProductionsADT  derivations){
+void setDerivations(AutomataADT automata, DerivationsADT  derivations){
 	automata->derivations = derivations;
 }
+
 
 /*Utility*/
 void printAutomata(AutomataADT automata){
@@ -105,7 +112,7 @@ void printAutomata(AutomataADT automata){
 			printf(" %c ",getFinalStates(automata)[i]);
 		}
 		printf("}\n");
-		printProductions(getDerivations(automata));
+		printDerivations(getDerivations(automata));
 		return;
 }
 
@@ -115,29 +122,19 @@ GrammarADT toGrammar(AutomataADT automata){
 	setNonTerminals(g,getStates(automata), getQuantStates(automata));
 	setTerminals(g, getSymbols(automata), getQuantSymbols(automata));
 	setDistinguished(g,getInitialstate(automata));
-	ProductionsADT derivations = getDerivations(automata);
-	int n = getQuant(derivations);
+	DerivationsADT derivations = getDerivations(automata);
+	int n = getDerivationsQuant(derivations);
 	int quantfinals = getQuantFinalStates(automata);
 	int i;
-	ProductionADT deriv;
 	ProductionsADT prods = newProductions(n+quantfinals);
-	ProductionADT array[n+quantfinals];
 	for (i=0; i<n; i++){
-		deriv = getProduction(derivations,i);
-		setComponent(array[i],0,getComponent(deriv,0));
-		setComponent(array[i],1,getComponent(deriv,1));
-		setComponent(array[i],2,getComponent(deriv,2));
-		setProduction(prods,i,array[i]);
+		setProduction(prods,i,toProduction(getDerivation(derivations,i)));
 	}
 	/*if P is in F , the production P->/ should be included*/
 	for(; i-n<quantfinals; i++){
-		setComponent(array[i],0,getFinalStates(automata)[i-n]);
-		setComponent(array[i],1,'/');
-		setComponent(array[i],2,'/');
-		setProduction(prods,i,array[i]);
+		setProduction(prods,i,newProduction(getFinalStates(automata)[i-n],'/','/'));
 	}
 	setProductions(g,prods);
-
 	return g;
 }
 

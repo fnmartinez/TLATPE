@@ -17,73 +17,87 @@ void destroy();
 void basicTest();
 void automataToGrammarTest();
 
-AutomataADT a;
-ProductionADT p1;
-ProductionADT p2;
-ProductionsADT prods;
+AutomataADT  a;
+DerivationADT d1;
+DerivationADT d2;
+DerivationsADT dervs;
 
 int main(void)
 {
 	init();
 	basicTest();
 	automataToGrammarTest();
-	/*destroy();*/
+	destroy();
 	return 0;
+
 }
 
 void init(){
-	a = newAutomata();
-	setInitialstate(a,'S');
+	 a = newAutomata();
+	setInitialstate( a,'S');
 	char * states = malloc(sizeof(char)*3);
 	char * symbols = malloc(sizeof(char)*2);
 	char * fnstates = malloc(sizeof(char)*2);
 
 	fnstates[0] = 'A';
 	fnstates[1] = 'B';
-	setFinalStates(a,fnstates,2);
+	setFinalStates( a,fnstates,2);
 
 	states[0] = 'S';
 	states[1] = 'A';
 	states[2] = 'B';
-	setStates(a,states,3);
+	setStates( a,states,3);
 
 	symbols[0] = 'a';
 	symbols[1] = 'b';
-	setSymbols(a,symbols,2);
+	setSymbols( a,symbols,2);
 
 
 	/*S->aA*/
-	p1 = newProduction('S','a','A');
+	d1 = newDerivation('S','a','A');
 	/*A-> bB*/
-	p2 = newProduction('A','b','B');
+	d2 = newDerivation('A','b','B');
 
-	prods = newProductions(2);
-	setProduction(prods,0,p1);
-	setProduction(prods,1,p2);
+	dervs = newDerivations(2);
+	setDerivation(dervs,0,d1);
+	setDerivation(dervs,1,d2);
 
-	setDerivations(a,prods);
+	setDerivations( a,dervs);
 
-	/*free(states);
+	/*derivations = newDerivations(2);
+	char * derv1 = malloc(sizeof(char)*3);
+	derv1[0] = 'S';
+	derv1[1] = 'a';
+	derv1[2] = 'A';
+	char * derv2 = malloc(sizeof(char)*3);
+	derv2[0] = 'A';
+	derv2[1] = 'b';
+	derv2[2] = 'B';
+	setDerivation(derivations,0,derv1);
+	setDerivation(derivations,1,derv2);*/
+
+
+	free(states);
 	free(symbols);
-	free(fnstates);*/
+	free(fnstates);
 }
 
 void destroy(){
-	freeProduction(p1);
-	freeProduction(p2);
-	freeProductions(prods);
-	/*freeAutomata(a);*/
+	freeDerivation(d1);
+	freeDerivation(d2);
+	freeDerivations(dervs);
+	freeAutomata( a);
 }
 void basicTest(){
 	printf("Testing Automata Structures / Basic \n");
-	printAutomata(a);
+	printAutomata( a);
 	printf("\n");
 }
 
 
 void automataToGrammarTest(){
 	printf("Testing Automata to Grammar Conversion \n");
-	GrammarADT g = toGrammar(a);
+	GrammarADT g = toGrammar( a);
 	printGrammar(g);
 	printf("\n");
 }
