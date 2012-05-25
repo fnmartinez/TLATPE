@@ -148,7 +148,7 @@ void add_terminal(char * s)
 		if(term_size == term_qty)
 		{
 			char * aux;
-			aux = realloc(terminals, term_size *= 0.3);
+			aux = realloc(terminals, term_size *= 1.5);
 			if(aux == NULL)
 			{
 				printf("Error: Not enought memory!\n");
@@ -182,7 +182,7 @@ void add_non_terminal(char * s)
 		if(nterm_size == nterm_qty)
 		{
 			char * aux;
-			aux = realloc(non_terminals, term_size *= 0.3);
+			aux = realloc(non_terminals, term_size *= 1.5);
 			if(aux == NULL)
 			{
 				printf("Error: Not enought memory!\n");
