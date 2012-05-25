@@ -14,18 +14,18 @@
 
 
 typedef struct Grammar{
+	ProductionsADT productions;
 	char * terminals;
 	char * nonterminals;
 	int quantterminals;
 	int quantnonterminals;
 	char distinguished;
-	ProductionsADT productions;
 }Grammar;
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void){
 	GrammarADT grammar;
-	grammar = malloc(sizeof(GrammarADT));
+	grammar = malloc(sizeof(struct Grammar));
 	return grammar;
 }
 void freeGrammar(GrammarADT grammar){

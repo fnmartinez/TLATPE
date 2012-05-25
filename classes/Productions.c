@@ -11,6 +11,7 @@
 # include "../include/Production.h"
 # include "../include/Productions.h"
 
+
 typedef struct Productions{
 	int n;
 	ProductionADT * productions;
@@ -18,8 +19,8 @@ typedef struct Productions{
 
 /*Constructor-destructor*/
 ProductionsADT newProductions(int n){
-	ProductionsADT p = malloc(sizeof(ProductionsADT));
-	p->productions = malloc(sizeof(ProductionADT)*n);
+	ProductionsADT p = (ProductionsADT)calloc(1, sizeof(struct Productions));
+	p->productions = calloc(n,sizeof(struct Productions));
 	p->n = n;
 	return p;
 }
@@ -33,13 +34,17 @@ char  getQuant(ProductionsADT productions){
 	return productions->n;
 }
 ProductionADT getProduction(ProductionsADT productions, int i){
-	return productions->productions[i];
+	char first = getProductionComponent(productions->productions[i],0);
+	char second = getProductionComponent(productions->productions[i],1);
+	char third = getProductionComponent(productions->productions[i], 2);
+	ProductionADT p = newProduction(first, second, third);
+	return p;
+
 }
 
 /*Setters*/
 void setProduction(ProductionsADT productions, int i, ProductionADT pr){
-	productions->productions[i] = malloc(sizeof(ProductionADT));
-	memcpy(productions->productions[i], pr, sizeof(ProductionADT) );
+	productions->productions[i] = pr;
 }
 
 /*Utility*/

@@ -8,17 +8,25 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include "../include/Production.h"
+# include "../include/Derivation.h"
+
 
 typedef struct Production{
 	char production[PRODSIZE];
 }Production;
 
+DerivationADT toDerivation(ProductionADT p);
+
 /*Constructor-destructor*/
 ProductionADT newProduction(char first, char sec, char third){
-	ProductionADT p = malloc(sizeof(ProductionADT));
-	setComponent(p,0,first);
-	setComponent(p,1,sec);
-	setComponent(p,2,third);
+	ProductionADT p = malloc(sizeof(struct Production));
+	setProductionComponent(p,0,first);
+	setProductionComponent(p,1,sec);
+	setProductionComponent(p,2,third);
+	return p;
+}
+ProductionADT newEmptyProduction(){
+	ProductionADT p = calloc(1,sizeof(struct Production));
 	return p;
 }
 void freeProduction(ProductionADT p){
@@ -26,17 +34,23 @@ void freeProduction(ProductionADT p){
 }
 
 /*Getters*/
-char getComponent(ProductionADT p, int i){
-	if(i < 0 ||i > 2){
+char getProductionComponent(ProductionADT p, int i){
+	if(i < 0 ||i >= PRODSIZE){
 		return -1;
 	}
 	return p->production[i];
 }
 
 /*Setters*/
-void setComponent(ProductionADT p, int i, char comp){
+void setProductionComponent(ProductionADT p, int i, char comp){
 	p->production[i] = comp;
 	return;
+}
+
+/*Conversion*/
+DerivationADT toDerivation(ProductionADT p){
+	return newDerivation( getProductionComponent(p,0),getProductionComponent(p,1),
+			getProductionComponent(p,2) );
 }
 
 /*Utility*/
