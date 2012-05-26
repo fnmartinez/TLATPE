@@ -56,12 +56,15 @@ void setProductions(GrammarADT grammar,ProductionsADT productions);
 /*Utility*/
 void printGrammar(GrammarADT grammar);
 void removeUnitaryProductions(GrammarADT grammar);
+void removeUnproductiveProductions(GrammarADT grammar);
 void removeUnreachableProductions(GrammarADT grammar);
 void removeOnlyRightTerminals(GrammarADT grammar);
 void convertToRight(GrammarADT grammar);
 void toFile(GrammarADT grammar);
 int isTerminal(char symbol);
 int isNonTerminal(char symbol);
+void actualizeTerminals(GrammarADT grammar);
+void actualizeNonTerminals(GrammarADT grammar);
 
 
 #endif /* STRUCTURES_H_ */

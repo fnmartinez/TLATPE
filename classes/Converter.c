@@ -6,17 +6,27 @@
 
 
 void formalize(GrammarADT grammar){
-	/*firstly, unitary productions must be removed*/
+	/*unitary productions must be removed*/
 	removeUnitaryProductions(grammar);
 
-	/*secondly, unreachable productions must be deleted*/
+	/*unproductive productiones must be removed*/
+	removeUnproductiveProductions(grammar);
+
+	/*unreachable productions must be deleted*/
 	removeUnreachableProductions(grammar);
 
-	/*thirdly, all productions must be in the form A-Ba or A-> /*/
+	/*all productions must be in the form A-Ba or A-> /*/
 	removeOnlyRightTerminals(grammar);
 
-	/*finally, the grammar must be right*/
+	/*the grammar must be right*/
 	convertToRight(grammar);
+
+	/*AGAIN : unproductive productiones must be removed*/
+	removeUnproductiveProductions(grammar);
+
+	/*AGAIN : unreachable productions must be deleted*/
+	removeUnreachableProductions(grammar);
+
 }
 
 AutomataADT toAutomata(GrammarADT grammar){

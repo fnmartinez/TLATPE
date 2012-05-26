@@ -5,6 +5,8 @@
  *      Author: joseignaciosantiagogalindo
  */
 #include "../include/Grammar.h"
+#include "../include/Automata.h"
+
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void){
@@ -148,6 +150,37 @@ void removeUnitaryProductions(GrammarADT grammar){
 }
 
 
+void removeUnproductiveProductions(GrammarADT grammar){
+	ProductionsADT  productions = getProductions(grammar);
+	int i, quantproductions = getQuant(productions), productivequant=0,lastproductivequant=0;
+	char * productives = NULL;
+	char * aux1 = NULL;
+	while(productivequant != lastproductivequant){
+		lastproductivequant = productivequant;
+		for( i=0; i< quantproductions;i++ ){
+			ProductionADT p1 = getProduction(productions,i);
+			int first1 = getProductionComponent(p1,0);
+			int sec1 = getProductionComponent(p1,1);
+			int third1 = getProductionComponent(p1,2);
+
+			if ( ( sec1 == '/' && third1 == '/' ) || /*lamda*/
+				 (isTerminal(sec1) && isTerminal(third1) ) || /*both terminal*/
+				 (   isTerminal(sec1) && third1 == '/'   ) || /*one terminal*/
+				 (   isTerminal(third1) && sec1 == '/'   ) ||
+				 /*one terminal and one productive*/
+				 (isTerminal(sec1) && ( isNonTerminal(third1) && containsChar(productives,productivequant,third1) ) ) ||
+				 (isTerminal(third1) && ( isNonTerminal(sec1) && containsChar(productives,productivequant,sec1) ) ) ){
+				 if ( ( aux1 = realloc(productives, sizeof(char)*(productivequant+1)) ) == NULL ){
+						fprintf(stderr, "Error doing realloc \n");
+				 }
+				 productives[productivequant++] = first1;
+			}
+		}
+	}
+}
+
+
+
 void removeUnreachableProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
 	int i, quantproductions = getQuant(productions), reachablesquant=0,lastreachablesquant=0;
@@ -197,8 +230,8 @@ void removeUnreachableProductions(GrammarADT grammar){
 		char * symsToRemove = NULL;
 		symsToRemovequant = getDifferents(getNonTerminals(grammar),
 				getQuantNonTerminals(grammar) ,reachables, reachablesquant, &symsToRemove);
-		printf("\nTO REMOVE:");
-		printArray(symsToRemove,symsToRemovequant );
+		/*printf("\nTO REMOVE:");
+		printArray(symsToRemove,symsToRemovequant );*/
 		for(i=0; i<symsToRemovequant; i++){
 			removeProduction(productions,symsToRemove[i]);
 		}
@@ -342,3 +375,61 @@ void toFile(GrammarADT grammar){
 	return;
 
 }
+
+void actualizeTerminals(GrammarADT grammar){
+	int termquant = getQuantTerminals(grammar);
+	char * termsfounded = NULL ;
+	char * aux1= NULL;
+	int termsfoundedsize =0;
+	ProductionsADT productions = getProductions(grammar);
+	int productionquant = getQuant(productions),i;
+	/*detect current terminals*/
+	for (i=0; i<productionquant; i++){
+		ProductionADT p = getProduction(productions,i);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		if (isTerminal(sec) && !containsChar(termsfounded,termsfoundedsize,sec) ){
+			addChar(&termsfounded, &termsfoundedsize, sec);
+		}
+		if(isTerminal(third) && !containsChar(termsfounded,termsfoundedsize,third)){
+			addChar(&termsfounded, &termsfoundedsize, third);
+		}
+	}
+	/*actualize terminals*/
+	if( termsfoundedsize != termquant ){
+		/*there are less current terminals*/
+		setTerminals(grammar,termsfounded,termsfoundedsize);
+	}
+}
+
+void actualizeNonTerminals(GrammarADT grammar){
+	int nontermquant = getQuantTerminals(grammar);
+	char * nontermsfounded = NULL ;
+	char * aux1= NULL;
+	int nontermsfoundedsize =0;
+	ProductionsADT productions = getProductions(grammar);
+	int productionquant = getQuant(productions),i;
+	/*detect current terminals*/
+	for (i=0; i<productionquant; i++){
+		ProductionADT p = getProduction(productions,i);
+		char first = getProductionComponent(p,0);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		if (isNonTerminal(first) && !containsChar(nontermsfounded,nontermsfoundedsize,first) ){
+			addChar(&nontermsfounded, &nontermsfoundedsize, first);
+		}
+		if (isNonTerminal(sec) && !containsChar(nontermsfounded,nontermsfoundedsize,sec) ){
+			addChar(&nontermsfounded, &nontermsfoundedsize, sec);
+		}
+		if(isNonTerminal(third) && !containsChar(nontermsfounded,nontermsfoundedsize,third)){
+			addChar(&nontermsfounded, &nontermsfoundedsize, third);
+		}
+	}
+	/*actualize terminals*/
+	if( nontermsfoundedsize != nontermquant ){
+		/*there are less current terminals*/
+		setNonTerminals(grammar,nontermsfounded,nontermsfoundedsize);
+	}
+
+}
+

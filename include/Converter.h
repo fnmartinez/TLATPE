@@ -11,6 +11,7 @@
 #include "Automata.h"
 #include "Grammar.h"
 
+void formalize(GrammarADT grammar);
 AutomataADT toAutomata(GrammarADT grammar);
 GrammarADT toGrammar(AutomataADT automata);
 

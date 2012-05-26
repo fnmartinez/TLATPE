@@ -47,6 +47,17 @@ void printArray(char * array, int size){
 	printf("}\n");
 }
 
+void addChar(char ** array, int * size, char c){
+	char * aux1 = NULL;
+	if ( ( aux1 = realloc(*array, sizeof(char)*((*size)+1)) ) == NULL ){
+		fprintf(stderr, "Error doing realloc \n");
+	}
+	(*array) = aux1;
+	(*array)[*(size)] = c;
+	*(size) = *(size) +1;
+}
+
+
 void addPair(char ** unitaries, int * size,char first, char sec ){
 	char * aux = NULL;
 	int n = *size;

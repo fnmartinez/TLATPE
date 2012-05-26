@@ -16,6 +16,7 @@
 int containsChar(char * array , int size, char c);
 int getDifferents( char * first,  int firstquant, char * sec, int secquant, char ** notinfirst);
 void printArray(char * array, int size);
+void addChar(char ** array, int * size, char c);
 
 /*for unitaries auxiliar array*/
 void addPair(char ** unitaries, int * size,char first, char sec );
