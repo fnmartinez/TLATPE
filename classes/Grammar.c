@@ -5,8 +5,6 @@
  *      Author: joseignaciosantiagogalindo
  */
 #include "../include/Grammar.h"
-/*#include "../include/Automata.h"*/
-
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void){

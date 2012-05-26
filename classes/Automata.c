@@ -122,7 +122,8 @@ void toDot(AutomataADT automata){
 
 	fwrite(buffer, len, 1, p);
 
-	int i, statesCount = getQuantStates(automata);
+	int i=0;
+	int statesCount = getQuantStates(automata);
 	char* states = getStates(automata);
 	char c = getInitialstate(automata);
 

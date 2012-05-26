@@ -7,16 +7,17 @@
 
 #ifndef AUTOMATA_H_
 #define AUTOMATA_H_
-#ifndef LAMDA
-#define LAMDA '\\'
-#endif
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "Derivation.h"
 #include "Derivations.h"
 #include "utils.h"
+
+#ifndef LAMDA
+#define LAMDA '\\'
+#endif
+
 
 typedef struct Automata{
 	DerivationsADT derivations;
