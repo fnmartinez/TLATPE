@@ -9,6 +9,8 @@
 # include <stdlib.h>
 # include "../include/Production.h"
 # include "../include/Derivation.h"
+# include "../include/utils.h"
+
 
 
 typedef struct Production{
@@ -26,7 +28,7 @@ ProductionADT newProduction(char first, char sec, char third){
 	return p;
 }
 ProductionADT newEmptyProduction(){
-	ProductionADT p = calloc(1,sizeof(struct Production));
+	ProductionADT p = calloc(1,sizeof( Production));
 	return p;
 }
 void freeProduction(ProductionADT p){
@@ -57,4 +59,21 @@ DerivationADT toDerivation(ProductionADT p){
 void printProduction(ProductionADT p, int i){
 	printf("\t %c -> %c%c\n", p->production[0],p->production[1],p->production[2]);
 	return;
+}
+int equals(ProductionADT p1, ProductionADT p2){
+	if ( getProductionComponent(p1,0) == getProductionComponent(p2,0) &&
+		getProductionComponent(p1,1) == getProductionComponent(p2,1) &&
+		getProductionComponent(p1,2) == getProductionComponent(p2,2) ){
+		return 1;
+	}
+	return 0;
+}
+int isUnitary(ProductionADT p){
+	char sec = getProductionComponent(p,1);
+	char third = getProductionComponent(p,2);
+	if( ( isNonTerminal(sec) && third == '/' ) ||
+			( isNonTerminal(third) && sec == '/') ){
+		return 1;
+	}
+	return 0;
 }

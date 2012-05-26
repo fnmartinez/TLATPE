@@ -9,8 +9,9 @@
 #define STRUCTURES_H_
 
 #include "Productions.h"
+#include "Automata.h"
+#include "TADS.h"
 
-typedef struct Grammar * GrammarADT;
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void);
@@ -32,7 +33,12 @@ void setProductions(GrammarADT grammar,ProductionsADT productions);
 
 /*Utility*/
 void printGrammar(GrammarADT grammar);
+void removeUnreachableProductions(GrammarADT grammar);
+void removeUnitaryProductions(GrammarADT grammar);
 
+
+/*Conversion*/
+AutomataADT toAutomata(GrammarADT grammar);
 
 
 

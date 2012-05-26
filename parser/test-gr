@@ -1,0 +1,3 @@
+flex gr-parser.l
+gcc -g -Wall -o parser lex.yy.c -lfl ../classes/Automata.c ../classes/Derivation.c ../classes/Derivations.c ../classes/Grammar.c ../classes/Production.c ../classes/Productions.c ../classes/Utils.c
+cat files/gr5.gr | ./parser

@@ -64,18 +64,6 @@ void init(){
 
 	setDerivations( a,dervs);
 
-	/*derivations = newDerivations(2);
-	char * derv1 = malloc(sizeof(char)*3);
-	derv1[0] = 'S';
-	derv1[1] = 'a';
-	derv1[2] = 'A';
-	char * derv2 = malloc(sizeof(char)*3);
-	derv2[0] = 'A';
-	derv2[1] = 'b';
-	derv2[2] = 'B';
-	setDerivation(derivations,0,derv1);
-	setDerivation(derivations,1,derv2);*/
-
 
 	free(states);
 	free(symbols);
