@@ -7,15 +7,6 @@
 
 #ifndef GRAMMAR_H_
 #define GRAMMAR_H_
-#ifndef LAMDA
-#define LAMDA '\\'
-#endif
-#ifndef _BOOL
-#define _BOOL
-#define FALSE 0
-#define TRUE 1
-#endif
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -23,6 +14,17 @@
 #include "Productions.h"
 #include "Production.h"
 #include "utils.h"
+
+#ifndef LAMDA
+#define LAMDA '\\'
+#endif
+
+#ifndef _BOOL
+#define _BOOL
+#define FALSE 0
+#define TRUE 1
+#endif
+
 
 typedef struct Grammar{
 	ProductionsADT productions;
