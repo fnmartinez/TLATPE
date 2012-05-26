@@ -14,3 +14,4 @@ Debido a que el esqueleto de la lógica fue construido en Lex y por la forma de 
 
 Esto se logra utilizando flags, que indiquen el último lugar que el programa logró levantar de forma correcta. Para casos más particulares, a los cuales Lex se le pueden escapar, como por ejemplo, el uso de símbolos no definidos previamente, o reglas inconsistentes, es que se utiliza el código en C para validar.
 
+
