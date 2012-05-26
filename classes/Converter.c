@@ -4,6 +4,21 @@
  */
 #include "../include/Converter.h"
 
+
+void formalize(GrammarADT grammar){
+	/*firstly, unitary productions must be removed*/
+	removeUnitaryProductions(grammar);
+
+	/*secondly, unreachable productions must be deleted*/
+	removeUnreachableProductions(grammar);
+
+	/*thirdly, all productions must be in the form A-Ba or A-> /*/
+	removeOnlyRightTerminals(grammar);
+
+	/*finally, the grammar must be right*/
+	convertToRight(grammar);
+}
+
 AutomataADT toAutomata(GrammarADT grammar){
 	AutomataADT a = newAutomata();
 
@@ -16,6 +31,9 @@ AutomataADT toAutomata(GrammarADT grammar){
 	/*the automata´s inital state is equal to the grammar distinguished symbol*/
 	setInitialstate(a, getDistinguished(grammar));
 
+
+
+	/*to automata conversion*/
 	ProductionsADT productions = getProductions(grammar);
 	int n = getQuant(productions);
 	int finalstatesquant = 0;

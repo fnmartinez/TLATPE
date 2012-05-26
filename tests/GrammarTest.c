@@ -42,14 +42,14 @@ int main(void)
 {
 	init();
 	basicTest();
-	//grammarToAutomata();
 	addProductionsTest();
+	grammarToAutomata();
 	//removeProductionsTest();
-	removeUnreachableProductionsTest();
-	removeOnlyRightTerminalsTest();
+	//removeUnreachableProductionsTest();
+	//emoveOnlyRightTerminalsTest();
 	//removeParticularProductionTest();
-	removeUnitaryProductionsTest();
-	convertToRightTest();
+	//removeUnitaryProductionsTest();
+	//convertToRightTest();
 
 
 	destroy();
@@ -119,7 +119,11 @@ void basicTest(){
 }
 
 void grammarToAutomata(){
-	printf("\nTesting Grammar to Automata Conversion  \n");
+	printf("\nTesting Grammar to Automata Conversion ");
+	printGrammar(g1);
+	formalize(g1);
+	printf("\nFormalized");
+	printGrammar(g1);
 	AutomataADT a = toAutomata(g1);
 	printAutomata(a);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
