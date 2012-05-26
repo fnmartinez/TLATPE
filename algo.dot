@@ -1,0 +1,42 @@
+digraph "source tree" {
+    overlap=scale;
+    size="8,10";
+    ratio="fill";
+    fontsize="16";
+    fontname="Helvetica";
+	clusterrank="local";
+	"Grammar.h" -> "Productions.h"
+	"AutomataTest.c" -> "Grammar.h"
+	"Productions.h" -> "TADS.h"
+	"Automata.h" -> "Productions.h"
+	"lex.yy.c" -> "Automata.h"
+	"Production.c" -> "Production.h"
+	"Automata.h" -> "Derivations.h"
+	"Derivations.h" -> "Derivation.h"
+	"Grammar.c" -> "Grammar.h"
+	"Utils.c" -> "utils.h"
+	"Grammar.h" -> "Derivation.h"
+	"GrammarTest.c" -> "Production.h"
+	"AutomataTest.c" -> "Production.h"
+	"Automata.h" -> "Derivation.h"
+	"Derivations.h" -> "TADS.h"
+	"Automata.h" -> "Grammar.h"
+	"UtilTest.c" -> "utils.h"
+	"Grammar.h" -> "Automata.h"
+	"Automata.h" -> "TADS.h"
+	"Derivation.c" -> "Derivation.h"
+	"Automata.h" -> "Production.h"
+	"Automata.c" -> "Automata.h"
+	"AutomataTest.c" -> "Productions.h"
+	"lex.yy.c" -> "Grammar.h"
+	"Grammar.h" -> "TADS.h"
+	"AutomataTest.c" -> "Automata.h"
+	"Derivations.c" -> "Derivations.h"
+	"Grammar.h" -> "utils.h"
+	"Grammar.h" -> "Derivations.h"
+	"Productions.c" -> "Productions.h"
+	"Productions.h" -> "Production.h"
+	"Grammar.h" -> "Production.h"
+	"GrammarTest.c" -> "Productions.h"
+	"GrammarTest.c" -> "Grammar.h"
+}
