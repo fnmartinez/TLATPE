@@ -89,9 +89,9 @@ void removeUnitaryProductions(GrammarADT grammar){
 		char first = getProductionComponent(getProduction(productions,i),0);
 		char sec = getProductionComponent(getProduction(productions,i),1);
 		char third = getProductionComponent(getProduction(productions,i),2);
-		if ( isNonTerminal(sec) && third == '/' ){
+		if ( isNonTerminal(sec) && third == LAMDA ){
 			addPair(&unitaries,&unitaryquant,first, sec);
-		}else if( isNonTerminal(third) && sec == '/'){
+		}else if( isNonTerminal(third) && sec == LAMDA){
 			addPair(&unitaries,&unitaryquant,first, third);
 		}
 	}
@@ -166,10 +166,10 @@ void removeUnproductiveProductions(GrammarADT grammar){
 			int sec1 = getProductionComponent(p1,1);
 			int third1 = getProductionComponent(p1,2);
 
-			if ( ( sec1 == '/' && third1 == '/' ) || /*lamda*/
+			if ( ( sec1 == LAMDA && third1 == LAMDA ) || /*lamda*/
 				 (isTerminal(sec1) && isTerminal(third1) ) || /*both terminal*/
-				 (   isTerminal(sec1) && third1 == '/'   ) || /*one terminal*/
-				 (   isTerminal(third1) && sec1 == '/'   ) ||
+				 (   isTerminal(sec1) && third1 == LAMDA   ) || /*one terminal*/
+				 (   isTerminal(third1) && sec1 == LAMDA   ) ||
 				 /*one terminal and one productive*/
 				 (isTerminal(sec1) && ( isNonTerminal(third1) && containsChar(productives,productivequant,third1) ) ) ||
 				 (isTerminal(third1) && ( isNonTerminal(sec1) && containsChar(productives,productivequant,sec1) ) ) ){
