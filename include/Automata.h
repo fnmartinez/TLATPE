@@ -59,6 +59,5 @@ int lenght(char * array);
 
 /*Conversion*/
 void toDot(AutomataADT automata);
-GrammarADT toGrammar(AutomataADT automata);
 
 #endif /* AUTOMATA_H_ */

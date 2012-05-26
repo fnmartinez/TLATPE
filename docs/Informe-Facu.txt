@@ -8,5 +8,9 @@ Se optó por la segunda por ser mucho más simple la implementación, aunque al 
 A su vez fue creado siguiendo el "camino feliz" de la ejecución. Eso quiere decir que Lex sólo parseará lo que esté correctamente escrito. Aquello que no lo esté, será trabajo del código en C identificar las razones de por qué no pudo ser levantado.
 
 -Características-
-El parser de gramáticas regulares es capaz de interpretar sólo gramáticas bien construidas. Las demás fallaran al pasar por el parser. Ante el más mínimo error, el programa abortará y 
+El parser de gramáticas regulares es capaz de interpretar sólo gramáticas bien construidas. Las demás fallaran al pasar por el parser. Ante el más mínimo error, el programa abortará y informando en la mejor manera posible de la falla.
+
+Debido a que el esqueleto de la lógica fue construido en Lex y por la forma de parseo, es imposible detectar la falla puntual en algunos casos. Sin embargo, es posible saber a grandes rasgos dónde se originó la falla, e informarle al usuario, a grandes rasgos, la razón principal del problema.
+
+Esto se logra utilizando flags, que indiquen el último lugar que el programa logró levantar de forma correcta. Para casos más particulares, a los cuales Lex se le pueden escapar, como por ejemplo, el uso de símbolos no definidos previamente, o reglas inconsistentes, es que se utiliza el código en C para validar.
 
