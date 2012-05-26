@@ -5,7 +5,7 @@
  *      Author: joseignaciosantiagogalindo
  */
 #include "../include/Grammar.h"
-#include "../include/Automata.h"
+/*#include "../include/Automata.h"*/
 
 
 /*Constructor-destructor*/
