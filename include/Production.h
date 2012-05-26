@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "utils.h"
 #define PRODSIZE 3
 
 typedef struct Production{
@@ -33,6 +34,8 @@ void setProductionComponent(ProductionADT p, int i, char comp);
 /*Utility*/
 void printProduction(ProductionADT p, int i);
 int equals(ProductionADT p1, ProductionADT p2);
+int isUnitary(ProductionADT p);
+
 
 /*Conversion*/
 /*DerivationADT toDerivation(ProductionADT p);*/

@@ -10,6 +10,11 @@
 #ifndef LAMDA
 #define LAMDA '\\'
 #endif
+#ifndef _BOOL
+#define _BOOL
+#define FALSE 0
+#define TRUE 1
+#endif
 
 #include <stdio.h>
 #include <string.h>
@@ -50,8 +55,10 @@ void setProductions(GrammarADT grammar,ProductionsADT productions);
 
 /*Utility*/
 void printGrammar(GrammarADT grammar);
+void removeUnitaryProductions(GrammarADT grammar);
 void removeUnreachableProductions(GrammarADT grammar);
 void removeOnlyRightTerminals(GrammarADT grammar);
+void convertToRight(GrammarADT grammar);
 void grammarToFile(GrammarADT grammar);
 int isTerminal(char symbol);
 int isNonTerminal(char symbol);

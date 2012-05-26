@@ -36,6 +36,8 @@ void printProductions(ProductionsADT productions);
 void removeProduction(ProductionsADT productions, char rightsymbol);
 int in(ProductionsADT productions, ProductionADT new);
 void addProduction(ProductionsADT productions, ProductionADT new);
+void removeParticularProduction(ProductionsADT productions, ProductionADT p);
 int inCurrentProductions(ProductionsADT productions, char c);
+
 
 #endif /* PRODUCTIONS_H_ */

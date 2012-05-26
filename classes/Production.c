@@ -50,3 +50,12 @@ int equals(ProductionADT p1, ProductionADT p2){
 	}
 	return 0;
 }
+int isUnitary(ProductionADT p){
+	char sec = getProductionComponent(p,1);
+	char third = getProductionComponent(p,2);
+	if( ( isNonTerminal(sec) && third == '/' ) ||
+			( isNonTerminal(third) && sec == '/') ){
+		return 1;
+	}
+	return 0;
+}

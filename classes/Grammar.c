@@ -10,7 +10,7 @@
 GrammarADT newGrammar(void){
 	GrammarADT grammar;
 	grammar = malloc(sizeof(struct Grammar));
-	//grammar->productions = malloc(sizeof(ProductionADT));
+	/*grammar->productions = malloc(sizeof(ProductionADT));*/
 	return grammar;
 }
 void freeGrammar(GrammarADT grammar){
@@ -79,21 +79,67 @@ void printGrammar(GrammarADT grammar){
 
 void removeUnitaryProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
-	int i, n = getQuant(productions), unitaryquant = 0;
-	char * unitaries;//auxiliar array
-	for (i=0; i<n; i++ ){
-		if (  getProductionComponent(getProduction(productions,i),1) == '/' &&
-				isNonTerminal(getProductionComponent(getProduction(productions,i),2)) ) {
-			unitaries = realloc(unitaries, sizeof(char)*(unitaryquant+1)*2);
-			unitaries[unitaryquant*2] = getProductionComponent(getProduction(productions,i),0);
-			unitaries[(unitaryquant*2)+1] =  getProductionComponent(getProduction(productions,i),2);
-		}else if( isNonTerminal(getProductionComponent(getProduction(productions,i),1))  &&
-					getProductionComponent(getProduction(productions,i),2) == '/'  ){
-			unitaries = realloc(unitaries, sizeof(char)*(unitaryquant+1)*2);
-			unitaries[unitaryquant*2] = getProductionComponent(getProduction(productions,i),0);
-			unitaries[(unitaryquant*2)+1] =  getProductionComponent(getProduction(productions,i),1);
+	int i,j,k, productionquant = getQuant(productions), unitaryquant = 0, lastunitaryquant = 0;
+	char * unitaries;/*auxiliar array*/
+	/*iterate over productions and determine first unitaries*/
+	for (i=0; i< productionquant; i++){
+		char first = getProductionComponent(getProduction(productions,i),0);
+		char sec = getProductionComponent(getProduction(productions,i),1);
+		char third = getProductionComponent(getProduction(productions,i),2);
+		if ( isNonTerminal(sec) && third == '/' ){
+			addPair(&unitaries,&unitaryquant,first, sec);
+		}else if( isNonTerminal(third) && sec == '/'){
+			addPair(&unitaries,&unitaryquant,first, third);
 		}
 	}
+	/*iterate over unitaries, adding the closure*/
+	while(unitaryquant != lastunitaryquant){
+		lastunitaryquant = unitaryquant;
+		for (i=0; i<unitaryquant ; i+=2){
+			char first1 = unitaries[i];
+			char sec1 = unitaries[i+1];
+			for (j=0; j<unitaryquant ; j+=2){
+				char first2 = unitaries[j];
+				char sec2 = unitaries[j+1];
+				/*(A,B)(B,C)-> (A,C)*/
+				if (sec1 == first2 ){
+					if (!containsPair(unitaries,unitaryquant,first1,sec2) &&
+							first1 != sec2 ){
+						addPair(&unitaries,&unitaryquant,first1,sec2);
+					}
+				}
+			}
+		}
+	}
+	printByPairs(unitaries,unitaryquant);
+	/*create the new productions and remove the unitaries*/
+	for(i=0; i<productionquant; i++){
+		ProductionADT p1 = getProduction(productions,i);
+		if ( isUnitary(p1) ){
+			char first1 = getProductionComponent(p1,0);
+			for(j=0;j<unitaryquant;j+=2){
+				char uni1 = unitaries[j];
+				char uni2 = unitaries[j+1];
+				/*A->B and (A,B)*/
+				if (first1 == uni1){
+					for(k=0; k<productionquant; k++ ){
+						ProductionADT p2 = getProduction(productions,i);
+						char first2 = getProductionComponent(p2,0);
+						char sec2 = getProductionComponent(p2,1);
+						char third2 = getProductionComponent(p2,2);
+						if(first2 == uni2 ){
+							if(!isUnitary(p2)){
+								addProduction(productions,newProduction(first1,sec2,third2));
+							}
+						}
+					}
+				}
+			}
+			removeParticularProduction(productions,p1);
+		}
+	}
+
+
 }
 
 
@@ -140,7 +186,7 @@ void removeUnreachableProductions(GrammarADT grammar){
 		}
 	}
 	int symsToRemovequant=0;
-	//remove the unreachable productions
+	/*remove the unreachable productions*/
 	/*If the quantity of reachables is equal to the quantity of nonterminals,
 	 * nothing should be removed*/
 	if (reachablesquant != getQuantNonTerminals(grammar)){
@@ -161,7 +207,23 @@ void removeOnlyRightTerminals(GrammarADT grammar){
 	char abc[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	int l = strlen(abc);
 	int i, j;
+	int found = FALSE;
 
+	for(j=0; j< getQuant(getProductions(grammar)); j++)
+	{
+		if((isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 1)) &&
+				getProductionComponent(getProduction(getProductions(grammar),j), 2) == LAMDA) ||
+				(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 2)) &&
+						getProductionComponent(getProduction(getProductions(grammar),j), 1) == LAMDA ))
+		{
+			found = TRUE;
+			break;
+		}
+	}
+
+	if(!found){
+		return;
+	}
 	for(i = 0; i<l; i++){
 		for(j = 0; j< getQuantNonTerminals(grammar) &&
 				getNonTerminals(grammar)[j] != abc[i]; j++);
@@ -206,9 +268,38 @@ void removeOnlyRightTerminals(GrammarADT grammar){
 	return;
 }
 
-void convertToRight(){
+void convertToRight(GrammarADT grammar){
 
+	int i;
+	char nd = 0;
+	int ml = FALSE;
 
+	for(i=0; i < getQuant(getProductions(grammar)); i++){
+		if(getProductionComponent(getProduction(getProductions(grammar), i), 1) == LAMDA &&
+				getProductionComponent(getProduction(getProductions(grammar), i), 2) == LAMDA){
+			if(nd != 0)
+			{
+				ml = TRUE; //More than one lamda production exist.
+				break;
+			}
+			nd = getProductionComponent(getProduction(getProductions(grammar), i), 0);
+		}
+	}
+
+	ProductionsADT ps = newProductions(0);
+	for(i = 0; i < getQuant(getProductions(grammar)); i++){
+		if(isNonTerminal(getProductionComponent(getProduction(getProductions(grammar), i), 1))){
+			addProduction(ps, newProduction(getProductionComponent(getProduction(getProductions(grammar), i), 1),
+					getProductionComponent(getProduction(getProductions(grammar), i), 2),
+					getProductionComponent(getProduction(getProductions(grammar), i), 0)));
+		}
+	}
+
+	setProductions(grammar, ps);
+	if(!ml){
+		addProduction(ps, newProduction(getDistinguished(grammar), LAMDA, LAMDA));
+		setDistinguished(grammar, nd);
+	}
 }
 
 void grammarToFile(GrammarADT grammar){
@@ -247,13 +338,3 @@ void grammarToFile(GrammarADT grammar){
 	return;
 
 }
-
-int isTerminal(char symbol){
-	return islower(symbol);
-}
-
-int isNonTerminal(char symbol){
-	return isupper(symbol);
-}
-
-

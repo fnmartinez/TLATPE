@@ -1,3 +1,0 @@
-flex gr-parser.l
-gcc -g -Wall -o parser lex.yy.c -lfl
-cat files/gr4.gr | ./parser

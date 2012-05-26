@@ -20,6 +20,10 @@ void removeProductionsTest();
 void addProductionsTest();
 void removeUnreachableProductionsTest();
 void removeOnlyRightTerminalsTest();
+void removeUnitaryProductionsTest();
+void removeParticularProductionTest();
+void convertToRightTest();
+
 
 ProductionsADT prods;
 GrammarADT g1;
@@ -41,8 +45,12 @@ int main(void)
 	//grammarToAutomata();
 	addProductionsTest();
 	//removeProductionsTest();
-	//removeUnreachableProductionsTest();
+	removeUnreachableProductionsTest();
 	removeOnlyRightTerminalsTest();
+	//removeParticularProductionTest();
+	removeUnitaryProductionsTest();
+	convertToRightTest();
+
 
 	destroy();
 	return 0;
@@ -64,32 +72,32 @@ void init(){
 	setTerminals(g1,term,2);
 
 	/*S-> aA*/
-	p1 = newProduction('S','a','A');
+	p1 = newProduction('S','A','b');
 	/*A-> b*/
 	p2 = newProduction('A','b',LAMDA);
 	/*B-> aB*/
-	p7 = newProduction('B','b','B');
+	p7 = newProduction('B','B','b');
 	/*A-> bA*/
-	p3 = newProduction('A','b','A');
+	p3 = newProduction('A','A','b');
 	/*A-> aB*/
-	p8 = newProduction('A','a','a');
+	p8 = newProduction('A','B','a');
 	/*B-> ab*/
-	p4 = newProduction('B','c','b');
+	//p4 = newProduction('B','c','b');
 	/*A-> bB*/
-	p5 = newProduction('A','b','B');
+	//p5 = newProduction('A','b','B');
 	/*A-> aB*/
-	p6 = newProduction('A','b','B');
+	//p6 = newProduction('A','/','B');
 
 
-	prods = newProductions(8);
+	prods = newProductions(5);
 	setProduction(prods,0,p1);
 	setProduction(prods,1,p2);
 	setProduction(prods,2,p7);
 	setProduction(prods,3,p3);
 	setProduction(prods,4,p8);
-	setProduction(prods,5,p4);
-	setProduction(prods,6,p5);
-	setProduction(prods,7,p6);
+//	setProduction(prods,5,p4);
+//	setProduction(prods,6,p5);
+//	setProduction(prods,7,p6);
 
 
 	setProductions(g1,prods);
@@ -119,17 +127,17 @@ void grammarToAutomata(){
 
 void removeProductionsTest(){
 	printf("\nTesting Remove Productions Method \n");
-	printf("to remove: all starting with 'S' \n");
-	removeProduction(getProductions(g1),'S');
+	printf("to remove: all starting with 'A' \n");
+	removeProduction(getProductions(g1),'A');
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
 
 void addProductionsTest(){
 	printf("\nTesting Add Productions Method \n");
-	addProduction(getProductions(g1), newProduction('C','C','C'));
-	addProduction(getProductions(g1), newProduction('S','B','/'));
-	addProduction(getProductions(g1), newProduction('B','B','B'));
+	addProduction(getProductions(g1), newProduction('S','/','A'));
+	addProduction(getProductions(g1), newProduction('B','/','C'));
+	addProduction(getProductions(g1), newProduction('C','/','D'));
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
@@ -139,12 +147,28 @@ void removeUnreachableProductionsTest(){
 	removeUnreachableProductions( g1 );
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
+}
 
+void removeUnitaryProductionsTest(){
+	removeUnitaryProductions(g1);
 }
 
 void removeOnlyRightTerminalsTest(){
 	printf("\nTesting Remove Only Right Terminals Method \n");
 	removeOnlyRightTerminals(g1);
+	printGrammar(g1);
+	printf("productions quant: %d\n", getQuant(getProductions(g1)));
+}
+void removeParticularProductionTest(){
+	printf("\nTesting Remove Particular Productions Method \n");
+	removeParticularProduction(getProductions(g1), newProduction('A','/','b'));
+	printGrammar(g1);
+	printf("productions quant: %d\n", getQuant(getProductions(g1)));
+}
+
+void convertToRightTest(){
+	printf("\nTesting Convert To Right Method\n");
+	convertToRight(g1);
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
