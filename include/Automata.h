@@ -39,6 +39,7 @@ void printAutomata(AutomataADT automata);
 int lenght(char * array);
 
 /*Conversion*/
+void toDot(AutomataADT automata);
 GrammarADT toGrammar(AutomataADT automata);
 
 
