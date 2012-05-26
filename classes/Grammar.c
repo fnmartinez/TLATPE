@@ -145,6 +145,9 @@ void removeUnitaryProductions(GrammarADT grammar){
 			free(p1);
 		}
 	}
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 
 
 }
@@ -177,6 +180,9 @@ void removeUnproductiveProductions(GrammarADT grammar){
 			}
 		}
 	}
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 }
 
 
@@ -236,6 +242,9 @@ void removeUnreachableProductions(GrammarADT grammar){
 			removeProduction(productions,symsToRemove[i]);
 		}
 	}
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 
 }
 
@@ -302,6 +311,9 @@ void removeOnlyRightTerminals(GrammarADT grammar){
 
 	addProduction(getProductions(grammar), newProduction(abc[i],LAMDA,LAMDA));
 
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 	return;
 }
 
@@ -337,6 +349,10 @@ void convertToRight(GrammarADT grammar){
 		addProduction(ps, newProduction(getDistinguished(grammar), LAMDA, LAMDA));
 		setDistinguished(grammar, nd);
 	}
+
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 }
 
 void toFile(GrammarADT grammar){
@@ -379,7 +395,6 @@ void toFile(GrammarADT grammar){
 void actualizeTerminals(GrammarADT grammar){
 	int termquant = getQuantTerminals(grammar);
 	char * termsfounded = NULL ;
-	char * aux1= NULL;
 	int termsfoundedsize =0;
 	ProductionsADT productions = getProductions(grammar);
 	int productionquant = getQuant(productions),i;
@@ -405,11 +420,10 @@ void actualizeTerminals(GrammarADT grammar){
 void actualizeNonTerminals(GrammarADT grammar){
 	int nontermquant = getQuantTerminals(grammar);
 	char * nontermsfounded = NULL ;
-	char * aux1= NULL;
 	int nontermsfoundedsize =0;
 	ProductionsADT productions = getProductions(grammar);
 	int productionquant = getQuant(productions),i;
-	/*detect current terminals*/
+	/*detect current non terminals*/
 	for (i=0; i<productionquant; i++){
 		ProductionADT p = getProduction(productions,i);
 		char first = getProductionComponent(p,0);
@@ -425,9 +439,9 @@ void actualizeNonTerminals(GrammarADT grammar){
 			addChar(&nontermsfounded, &nontermsfoundedsize, third);
 		}
 	}
-	/*actualize terminals*/
+	/*actualize non terminals*/
 	if( nontermsfoundedsize != nontermquant ){
-		/*there are less current terminals*/
+		/*there are less current non terminals*/
 		setNonTerminals(grammar,nontermsfounded,nontermsfoundedsize);
 	}
 
