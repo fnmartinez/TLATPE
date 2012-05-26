@@ -15,9 +15,9 @@ grammar: $(FILES) $(GR_CC_FILES)
 
 grammar.yy.c:	
 	$(FLEX) -o grammar.yy.c $(GR_FL_FILES) 
+	
 AT_FL_FILES = ./parser/lex/Automata.l
 AT_CC_FILES = ./parser/src/Automata.c ./automata.yy.c
-
 automata: $(FILES) $(AT_CC_FILES)
 	$(FLEX) $(AT_FL_FILES)
 	$(CC) $(COPTS) -o $(OUT_EXE) $(FILES) $(AT_CC_FILES) $(LDOPTS)
