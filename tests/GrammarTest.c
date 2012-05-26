@@ -19,6 +19,8 @@ void removeProductionsTest();
 void addProductionsTest();
 void removeUnreachableProductionsTest();
 void removeUnitaryProductionsTest();
+void removeParticularProductionTest();
+
 
 
 ProductionsADT prods;
@@ -42,7 +44,8 @@ int main(void)
 	addProductionsTest();
 	//removeProductionsTest();
 	//removeUnreachableProductionsTest();
-	removeUnitaryProductionsTest();
+	removeParticularProductionTest();
+	//removeUnitaryProductionsTest();
 
 
 	destroy();
@@ -145,3 +148,12 @@ void removeUnreachableProductionsTest(){
 void removeUnitaryProductionsTest(){
 	removeUnitaryProductions(g1);
 }
+
+void removeParticularProductionTest(){
+	printf("\nTesting Remove Particular Productions Method \n");
+	removeParticularProduction(getProductions(g1), newProduction('A','/','b'));
+	printGrammar(g1);
+	printf("productions quant: %d\n", getQuant(getProductions(g1)));
+}
+
+

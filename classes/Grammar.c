@@ -19,8 +19,6 @@
 # include "../include/utils.h"
 
 DerivationADT toDerivation(ProductionADT p);
-static int isTerminal(char symbol);
-static int isNonTerminal(char symbol);
 
 typedef struct Grammar{
 	ProductionsADT productions;
@@ -147,10 +145,10 @@ AutomataADT toAutomata(GrammarADT grammar){
 
 void removeUnitaryProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
-	int i,j, n = getQuant(productions), unitaryquant = 0, lastunitaryquant = 0;
+	int i,j,k, productionquant = getQuant(productions), unitaryquant = 0, lastunitaryquant = 0;
 	char * unitaries;//auxiliar array
 	/*iterate over productions and determine first unitaries*/
-	for (i=0; i< n; i++){
+	for (i=0; i< productionquant; i++){
 		char first = getProductionComponent(getProduction(productions,i),0);
 		char sec = getProductionComponent(getProduction(productions,i),1);
 		char third = getProductionComponent(getProduction(productions,i),2);
@@ -180,15 +178,30 @@ void removeUnitaryProductions(GrammarADT grammar){
 		}
 	}
 	printByPairs(unitaries,unitaryquant);
-	for(i=0; i<n; i++){
-		char first1 = getProductionComponent(getProduction(productions,i),1);
-		char sec1 = getProductionComponent(getProduction(productions,i),2);
-		for(j=0; j<n; j++){
-			char first2 = getProductionComponent(getProduction(productions,i),1);
-			char sec2 = getProductionComponent(getProduction(productions,i),2);
-			if ( sec1 == first2 ){
-
+	/*create the new productions and remove the unitaries*/
+	for(i=0; i<productionquant; i++){
+		ProductionADT p1 = getProduction(productions,i);
+		if ( isUnitary(p1) ){
+			char first1 = getProductionComponent(p1,0);
+			for(j=0;j<unitaryquant;j+=2){
+				char uni1 = unitaries[j];
+				char uni2 = unitaries[j+1];
+				/*A->B and (A,B)*/
+				if (first1 == uni1){
+					for(k=0; k<productionquant; k++ ){
+						ProductionADT p2 = getProduction(productions,i);
+						char first2 = getProductionComponent(p2,0);
+						char sec2 = getProductionComponent(p2,1);
+						char third2 = getProductionComponent(p2,2);
+						if(first2 == uni2 ){
+							if(!isUnitary(p2)){
+								addProduction(productions,newProduction(first1,sec2,third2));
+							}
+						}
+					}
+				}
 			}
+			removeParticularProduction(productions,p1);
 		}
 	}
 
@@ -264,12 +277,5 @@ static void convertToRight(){
 
 }*/
 
-static int isTerminal(char symbol){
-	return islower(symbol);
-}
-
-static int isNonTerminal(char symbol){
-	return isupper(symbol);
-}
 
 

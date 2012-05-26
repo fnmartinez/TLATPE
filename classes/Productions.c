@@ -81,7 +81,7 @@ void addProduction(ProductionsADT productions, ProductionADT new){
 void removeProduction(ProductionsADT productions, char leftsymbol){
 	/*if rightsymbol islower return -1 */
 	int i, n = getQuant(productions);
-	ProductionADT * aux;
+	ProductionADT * auxi = NULL;
 	for(i=0; i<n; i++){
 		if ( getProductionComponent(getProduction(productions,i),0) == leftsymbol){
 			if (n-1 != i ){ /*is not the last production*/
@@ -91,10 +91,26 @@ void removeProduction(ProductionsADT productions, char leftsymbol){
 				ProductionADT aux = getProduction(productions,n-1);
 				setProduction(productions,i,aux);
 			}
-			if ( (aux = realloc(productions->productions,(--n)*sizeof(ProductionADT))) == NULL ){
+			if ( (auxi = realloc(productions->productions,(--n)*sizeof(ProductionADT))) == NULL ){
 				fprintf(stderr, "Error doing realloc \n");
 			}
-			productions->productions = aux;
+			productions->productions = auxi;
+			productions->n = n;
+		}
+	}
+}
+void removeParticularProduction(ProductionsADT productions, ProductionADT p){
+	int i,n = getQuant(productions);
+	ProductionADT * auxi = NULL;
+	for(i=0; i<n;i++){
+		if ( equals(getProduction(productions,i),p) ){
+			if (n-1 != i ){ /*is not the last production*/
+				setProduction(productions,i,getProduction(productions,n-1));
+			}
+			if ( (auxi = realloc(productions->productions,(--n)*sizeof(ProductionADT))) == NULL ){
+				fprintf(stderr, "Error doing realloc \n");
+			}
+			productions->productions = auxi;
 			productions->n = n;
 		}
 	}

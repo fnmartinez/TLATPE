@@ -9,6 +9,8 @@
 # include <stdlib.h>
 # include "../include/Production.h"
 # include "../include/Derivation.h"
+# include "../include/utils.h"
+
 
 
 typedef struct Production{
@@ -67,10 +69,10 @@ int equals(ProductionADT p1, ProductionADT p2){
 	return 0;
 }
 int isUnitary(ProductionADT p){
-	int first = getProductionComponent(p,0);
-	int sec = getProductionComponent(p,1);
-	int third = getProductionComponent(p,2);
-	if (first == sec || first == third){
+	char sec = getProductionComponent(p,1);
+	char third = getProductionComponent(p,2);
+	if( ( isNonTerminal(sec) && third == '/' ) ||
+			( isNonTerminal(third) && sec == '/') ){
 		return 1;
 	}
 	return 0;

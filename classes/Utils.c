@@ -83,3 +83,12 @@ void printByPairs(char * unitaries,int size){
 	printf("\n");
 
 }
+
+int isTerminal(char symbol){
+	return islower(symbol);
+}
+
+int isNonTerminal(char symbol){
+	return isupper(symbol);
+}
+

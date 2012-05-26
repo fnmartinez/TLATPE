@@ -7,6 +7,7 @@
 
 #ifndef UTILS_H_
 #define UTILS_H_
+# include <ctype.h>
 
 // sudo gcc -g -Wall  UtilTest.c ../classes/Utils.c -o utils
 
@@ -18,4 +19,9 @@ void printArray(char * array, int size);
 void addPair(char ** unitaries, int * size,char first, char sec );
 int containsPair(char * unitaries,int size, char first, char sec);
 void printByPairs(char * unitaries,int size);
+
+
+/*for grammar*/
+int isTerminal(char symbol);
+int isNonTerminal(char symbol);
 #endif /* UTILS_H_ */
