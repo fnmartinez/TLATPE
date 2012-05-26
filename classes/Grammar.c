@@ -15,7 +15,7 @@
 # include "../include/Production.h"
 # include "../include/Derivations.h"
 # include "../include/Derivation.h"
-# include "../include/TADs.h"
+# include "../include/TADS.h"
 # include "../include/utils.h"
 
 static void removeOnlyRightTerminals(GrammarADT grammar);
