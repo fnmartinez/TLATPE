@@ -35,7 +35,7 @@ typedef struct Grammar{
 GrammarADT newGrammar(void){
 	GrammarADT grammar;
 	grammar = malloc(sizeof(struct Grammar));
-	//grammar->productions = malloc(sizeof(ProductionADT));
+	/*grammar->productions = malloc(sizeof(ProductionADT));*/
 	return grammar;
 }
 void freeGrammar(GrammarADT grammar){
@@ -146,7 +146,7 @@ AutomataADT toAutomata(GrammarADT grammar){
 void removeUnitaryProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
 	int i,j,k, productionquant = getQuant(productions), unitaryquant = 0, lastunitaryquant = 0;
-	char * unitaries;//auxiliar array
+	char * unitaries;/*auxiliar array*/
 	/*iterate over productions and determine first unitaries*/
 	for (i=0; i< productionquant; i++){
 		char first = getProductionComponent(getProduction(productions,i),0);
@@ -252,7 +252,7 @@ void removeUnreachableProductions(GrammarADT grammar){
 		}
 	}
 	int symsToRemovequant=0;
-	//remove the unreachable productions
+	/*remove the unreachable productions*/
 	/*If the quantity of reachables is equal to the quantity of nonterminals,
 	 * nothing should be removed*/
 	if (reachablesquant != getQuantNonTerminals(grammar)){
