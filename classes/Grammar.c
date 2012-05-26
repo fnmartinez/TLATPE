@@ -5,6 +5,8 @@
  *      Author: joseignaciosantiagogalindo
  */
 #include "../include/Grammar.h"
+#include "../include/Automata.h"
+
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void){
@@ -87,9 +89,9 @@ void removeUnitaryProductions(GrammarADT grammar){
 		char first = getProductionComponent(getProduction(productions,i),0);
 		char sec = getProductionComponent(getProduction(productions,i),1);
 		char third = getProductionComponent(getProduction(productions,i),2);
-		if ( isNonTerminal(sec) && third == '/' ){
+		if ( isNonTerminal(sec) && third == LAMDA ){
 			addPair(&unitaries,&unitaryquant,first, sec);
-		}else if( isNonTerminal(third) && sec == '/'){
+		}else if( isNonTerminal(third) && sec == LAMDA){
 			addPair(&unitaries,&unitaryquant,first, third);
 		}
 	}
@@ -143,9 +145,46 @@ void removeUnitaryProductions(GrammarADT grammar){
 			free(p1);
 		}
 	}
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 
 
 }
+
+
+void removeUnproductiveProductions(GrammarADT grammar){
+	ProductionsADT  productions = getProductions(grammar);
+	int i, quantproductions = getQuant(productions), productivequant=0,lastproductivequant=0;
+	char * productives = NULL;
+	char * aux1 = NULL;
+	while(productivequant != lastproductivequant){
+		lastproductivequant = productivequant;
+		for( i=0; i< quantproductions;i++ ){
+			ProductionADT p1 = getProduction(productions,i);
+			int first1 = getProductionComponent(p1,0);
+			int sec1 = getProductionComponent(p1,1);
+			int third1 = getProductionComponent(p1,2);
+
+			if ( ( sec1 == LAMDA && third1 == LAMDA ) || /*lamda*/
+				 (isTerminal(sec1) && isTerminal(third1) ) || /*both terminal*/
+				 (   isTerminal(sec1) && third1 == LAMDA   ) || /*one terminal*/
+				 (   isTerminal(third1) && sec1 == LAMDA   ) ||
+				 /*one terminal and one productive*/
+				 (isTerminal(sec1) && ( isNonTerminal(third1) && containsChar(productives,productivequant,third1) ) ) ||
+				 (isTerminal(third1) && ( isNonTerminal(sec1) && containsChar(productives,productivequant,sec1) ) ) ){
+				 if ( ( aux1 = realloc(productives, sizeof(char)*(productivequant+1)) ) == NULL ){
+						fprintf(stderr, "Error doing realloc \n");
+				 }
+				 productives[productivequant++] = first1;
+			}
+		}
+	}
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
+}
+
 
 
 void removeUnreachableProductions(GrammarADT grammar){
@@ -197,12 +236,15 @@ void removeUnreachableProductions(GrammarADT grammar){
 		char * symsToRemove = NULL;
 		symsToRemovequant = getDifferents(getNonTerminals(grammar),
 				getQuantNonTerminals(grammar) ,reachables, reachablesquant, &symsToRemove);
-		printf("\nTO REMOVE:");
-		printArray(symsToRemove,symsToRemovequant );
+		/*printf("\nTO REMOVE:");
+		printArray(symsToRemove,symsToRemovequant );*/
 		for(i=0; i<symsToRemovequant; i++){
 			removeProduction(productions,symsToRemove[i]);
 		}
 	}
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 
 }
 
@@ -269,6 +311,9 @@ void removeOnlyRightTerminals(GrammarADT grammar){
 
 	addProduction(getProductions(grammar), newProduction(abc[i],LAMDA,LAMDA));
 
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 	return;
 }
 
@@ -304,6 +349,10 @@ void convertToRight(GrammarADT grammar){
 		addProduction(ps, newProduction(getDistinguished(grammar), LAMDA, LAMDA));
 		setDistinguished(grammar, nd);
 	}
+
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(grammar);
+	actualizeNonTerminals(grammar);
 }
 
 void toFile(GrammarADT grammar){
@@ -342,3 +391,59 @@ void toFile(GrammarADT grammar){
 	return;
 
 }
+
+void actualizeTerminals(GrammarADT grammar){
+	int termquant = getQuantTerminals(grammar);
+	char * termsfounded = NULL ;
+	int termsfoundedsize =0;
+	ProductionsADT productions = getProductions(grammar);
+	int productionquant = getQuant(productions),i;
+	/*detect current terminals*/
+	for (i=0; i<productionquant; i++){
+		ProductionADT p = getProduction(productions,i);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		if (isTerminal(sec) && !containsChar(termsfounded,termsfoundedsize,sec) ){
+			addChar(&termsfounded, &termsfoundedsize, sec);
+		}
+		if(isTerminal(third) && !containsChar(termsfounded,termsfoundedsize,third)){
+			addChar(&termsfounded, &termsfoundedsize, third);
+		}
+	}
+	/*actualize terminals*/
+	if( termsfoundedsize != termquant ){
+		/*there are less current terminals*/
+		setTerminals(grammar,termsfounded,termsfoundedsize);
+	}
+}
+
+void actualizeNonTerminals(GrammarADT grammar){
+	int nontermquant = getQuantTerminals(grammar);
+	char * nontermsfounded = NULL ;
+	int nontermsfoundedsize =0;
+	ProductionsADT productions = getProductions(grammar);
+	int productionquant = getQuant(productions),i;
+	/*detect current non terminals*/
+	for (i=0; i<productionquant; i++){
+		ProductionADT p = getProduction(productions,i);
+		char first = getProductionComponent(p,0);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		if (isNonTerminal(first) && !containsChar(nontermsfounded,nontermsfoundedsize,first) ){
+			addChar(&nontermsfounded, &nontermsfoundedsize, first);
+		}
+		if (isNonTerminal(sec) && !containsChar(nontermsfounded,nontermsfoundedsize,sec) ){
+			addChar(&nontermsfounded, &nontermsfoundedsize, sec);
+		}
+		if(isNonTerminal(third) && !containsChar(nontermsfounded,nontermsfoundedsize,third)){
+			addChar(&nontermsfounded, &nontermsfoundedsize, third);
+		}
+	}
+	/*actualize non terminals*/
+	if( nontermsfoundedsize != nontermquant ){
+		/*there are less current non terminals*/
+		setNonTerminals(grammar,nontermsfounded,nontermsfoundedsize);
+	}
+
+}
+

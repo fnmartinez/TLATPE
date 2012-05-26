@@ -6,17 +6,27 @@
 
 
 void formalize(GrammarADT grammar){
-	/*firstly, unitary productions must be removed*/
+	/*unitary productions must be removed*/
 	removeUnitaryProductions(grammar);
 
-	/*secondly, unreachable productions must be deleted*/
+	/*unproductive productiones must be removed*/
+	removeUnproductiveProductions(grammar);
+
+	/*unreachable productions must be deleted*/
 	removeUnreachableProductions(grammar);
 
-	/*thirdly, all productions must be in the form A-Ba or A-> /*/
+	/*all productions must be in the form A-Ba or A-> /*/
 	removeOnlyRightTerminals(grammar);
 
-	/*finally, the grammar must be right*/
+	/*the grammar must be right*/
 	convertToRight(grammar);
+
+	/*AGAIN : unproductive productiones must be removed*/
+	removeUnproductiveProductions(grammar);
+
+	/*AGAIN : unreachable productions must be deleted*/
+	removeUnreachableProductions(grammar);
+
 }
 
 AutomataADT toAutomata(GrammarADT grammar){
@@ -31,32 +41,32 @@ AutomataADT toAutomata(GrammarADT grammar){
 	/*the automata´s inital state is equal to the grammar distinguished symbol*/
 	setInitialstate(a, getDistinguished(grammar));
 
-
-
 	/*to automata conversion*/
 	ProductionsADT productions = getProductions(grammar);
 	int n = getQuant(productions);
 	int finalstatesquant = 0;
 	char * finalstates = malloc(sizeof(char));
 	int i,derivationquant=0;
-	char * aux;
+	ProductionADT p = NULL;
 	for(i=0; i<n; i++){
-		if ( getProductionComponent(getProduction(productions,i),1) == '/' &&
-				 getProductionComponent(getProduction(productions,i),2) == '/' ){
-			if ( (aux = realloc(finalstates,sizeof(char)*(finalstatesquant+1)) ) == NULL ){
-				  fprintf(stderr, "Not enough space for finalstates\n");
-			}
-			finalstates = aux;
-			finalstates[finalstatesquant++] = getProductionComponent(getProduction(productions,i),0);
+		p = getProduction(productions,i);
+		char first = getProductionComponent(p,0);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		if ( sec == LAMDA && third== LAMDA ){
+			addChar(&finalstates,&finalstatesquant,first);
 		}
 	}
 	setFinalStates(a, finalstates, finalstatesquant);
 	DerivationsADT derivations = newDerivations(n-finalstatesquant);
 	for(i=0; i<n; i++){
-		if ( getProductionComponent(getProduction(productions,i),1) != '/' ||
-						 getProductionComponent(getProduction(productions,i),2) != '/' ){
-			setDerivation(derivations,derivationquant++, (DerivationADT) toDerivation( getProduction(productions,i) ) );
+		p = getProduction(productions,i);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		if ( sec == LAMDA && third == LAMDA ){
+			continue;
 		}
+		setDerivation(derivations,derivationquant++, (DerivationADT) toDerivation( p ) );
 	}
 	setDerivations(a,derivations);
 	return a;
@@ -77,7 +87,7 @@ GrammarADT toGrammar(AutomataADT automata){
 	}
 	/*if P is in F , the production P->/ should be included*/
 	for(; i-n<quantfinals; i++){
-		setProduction(prods,i,newProduction(getFinalStates(automata)[i-n],'/','/'));
+		setProduction(prods,i,newProduction(getFinalStates(automata)[i-n],LAMDA,LAMDA));
 	}
 	setProductions(g,prods);
 	return g;

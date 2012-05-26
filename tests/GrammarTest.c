@@ -25,6 +25,7 @@ void removeParticularProductionTest();
 void convertToRightTest();
 
 
+
 ProductionsADT prods;
 GrammarADT g1;
 char * nonterminals;
@@ -41,12 +42,12 @@ ProductionADT p8;
 int main(void)
 {
 	init();
-	basicTest();
-	addProductionsTest();
+	//basicTest();
+	//addProductionsTest();
 	grammarToAutomata();
 	//removeProductionsTest();
 	//removeUnreachableProductionsTest();
-	//emoveOnlyRightTerminalsTest();
+	//removeOnlyRightTerminalsTest();
 	//removeParticularProductionTest();
 	//removeUnitaryProductionsTest();
 	//convertToRightTest();
@@ -86,7 +87,7 @@ void init(){
 	/*A-> bB*/
 	//p5 = newProduction('A','b','B');
 	/*A-> aB*/
-	//p6 = newProduction('A','/','B');
+	//p6 = newProduction('A',LAMDA,'B');
 
 
 	prods = newProductions(5);
@@ -114,6 +115,9 @@ void destroy(){
 
 void basicTest(){
 	printf("Testing Grammar Structures / Basic \n");
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(g1);
+	actualizeNonTerminals(g1);
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
@@ -133,15 +137,18 @@ void removeProductionsTest(){
 	printf("\nTesting Remove Productions Method \n");
 	printf("to remove: all starting with 'A' \n");
 	removeProduction(getProductions(g1),'A');
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(g1);
+	actualizeNonTerminals(g1);
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
 
 void addProductionsTest(){
 	printf("\nTesting Add Productions Method \n");
-	addProduction(getProductions(g1), newProduction('S','/','A'));
-	addProduction(getProductions(g1), newProduction('B','/','C'));
-	addProduction(getProductions(g1), newProduction('C','/','D'));
+	addProduction(getProductions(g1), newProduction('S',LAMDA,'A'));
+	addProduction(getProductions(g1), newProduction('B',LAMDA,'C'));
+	addProduction(getProductions(g1), newProduction('C',LAMDA,'D'));
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
@@ -168,7 +175,10 @@ void removeOnlyRightTerminalsTest(){
 }
 void removeParticularProductionTest(){
 	printf("\nTesting Remove Particular Productions Method \n");
-	removeParticularProduction(getProductions(g1), newProduction('A','/','b'));
+	removeParticularProduction(getProductions(g1), newProduction('A',LAMDA,'b'));
+	/*remove non terminals and terminals that are no longer there */
+	actualizeTerminals(g1);
+	actualizeNonTerminals(g1);
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
