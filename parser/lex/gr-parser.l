@@ -1,5 +1,6 @@
 %{
 #include "src/gr-parser.h"
+
 char previous;
 int h, k;
 extern int valid_name, valid_grammar, valid_nt, valid_t, valid_d, valid_p;
