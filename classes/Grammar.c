@@ -4,35 +4,7 @@
  *  Created on: May 14, 2012
  *      Author: joseignaciosantiagogalindo
  */
-
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include <ctype.h>
-# include "../include/Grammar.h"
-# include "../include/Automata.h"
-# include "../include/Productions.h"
-# include "../include/Production.h"
-# include "../include/Derivations.h"
-# include "../include/Derivation.h"
-# include "../include/TADS.h"
-# include "../include/utils.h"
-
-static void removeOnlyRightTerminals(GrammarADT grammar);
-DerivationADT toDerivation(ProductionADT p);
-static int isTerminal(char symbol);
-static int isNonTerminal(char symbol);
-
-typedef struct Grammar{
-	ProductionsADT productions;
-	char * terminals;
-	char * nonterminals;
-	int quantterminals;
-	int quantnonterminals;
-	char distinguished;
-}Grammar;
-
-
+#include "../include/Grammar.h"
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void){
@@ -105,48 +77,7 @@ void printGrammar(GrammarADT grammar){
 	return;
 }
 
-AutomataADT toAutomata(GrammarADT grammar){
-	AutomataADT a = newAutomata();
-
-	/*the automata´s symbols are equal to the grammar´s terminal symbols*/
-	setSymbols(a, getTerminals(grammar), getQuantTerminals(grammar));
-
-	/*the automata´s states are equal to the grammar´s non terminal symbols*/
-	setStates(a, getNonTerminals(grammar), getQuantNonTerminals(grammar));
-
-	/*the automata´s inital state is equal to the grammar distinguished symbol*/
-	setInitialstate(a, getDistinguished(grammar));
-
-	ProductionsADT productions = getProductions(grammar);
-	int n = getQuant(productions);
-	int finalstatesquant = 0;
-	char * finalstates = malloc(sizeof(char));
-	int i,derivationquant=0;
-	char * aux;
-	for(i=0; i<n; i++){
-		if ( getProductionComponent(getProduction(productions,i),1) == '/' &&
-				 getProductionComponent(getProduction(productions,i),2) == '/' ){
-			if ( (aux = realloc(finalstates,sizeof(char)*(finalstatesquant+1)) ) == NULL ){
-				  fprintf(stderr, "Not enough space for finalstates\n");
-			}
-			finalstates = aux;
-			finalstates[finalstatesquant++] = getProductionComponent(getProduction(productions,i),0);
-		}
-	}
-	setFinalStates(a, finalstates, finalstatesquant);
-	DerivationsADT derivations = newDerivations(n-finalstatesquant);
-	for(i=0; i<n; i++){
-		if ( getProductionComponent(getProduction(productions,i),1) != '/' ||
-						 getProductionComponent(getProduction(productions,i),2) != '/' ){
-			setDerivation(derivations,derivationquant++, (DerivationADT) toDerivation( getProduction(productions,i) ) );
-		}
-	}
-	setDerivations(a,derivations);
-	return a;
-}
-
-
-static void removeUnitaryProductions(GrammarADT grammar){
+void removeUnitaryProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
 	int i, n = getQuant(productions), unitaryquant = 0;
 	char * unitaries;//auxiliar array
@@ -226,19 +157,102 @@ void removeUnreachableProductions(GrammarADT grammar){
 }
 
 
-/*
-static void removeOnlyRightTerminals(GrammarADT grammar){
+void removeOnlyRightTerminals(GrammarADT grammar){
+	char abc[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	int l = strlen(abc);
+	int i, j;
+
+	for(i = 0; i<l; i++){
+		for(j = 0; j< getQuantNonTerminals(grammar) &&
+				getNonTerminals(grammar)[j] != abc[i]; j++);
+		if(j==getQuantNonTerminals(grammar))
+		{
+			break;
+		}
+	}
+
+	char * nterm = getNonTerminals(grammar);
+	int ntermQty = getQuantNonTerminals(grammar);
+
+	char * aux = realloc(nterm, (ntermQty+1)*sizeof(char));
+	if(aux == NULL)
+	{
+		printf("Error: Not enought memory\n");
+		exit(1);
+	}
+	nterm[ntermQty] = abc[i];
+	ntermQty++;
+	setNonTerminals(grammar, nterm, ntermQty);
+
+	for(j=0; j< getQuant(getProductions(grammar)); j++)
+	{
+		if(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 1)) &&
+				getProductionComponent(getProduction(getProductions(grammar),j), 2) == LAMDA )
+		{
+			printProduction(getProduction(getProductions(grammar),j),0);
+			setProductionComponent(getProduction(getProductions(grammar),j), 2, getProductionComponent(getProduction(getProductions(grammar),j), 1));
+			setProductionComponent(getProduction(getProductions(grammar),j), 1, abc[i]);
+		}
+		if(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 2)) &&
+				getProductionComponent(getProduction(getProductions(grammar),j), 1) == LAMDA )
+		{
+			printProduction(getProduction(getProductions(grammar),j),0);
+			setProductionComponent(getProduction(getProductions(grammar),j), 1, abc[i]);
+		}
+	}
+
+	addProduction(getProductions(grammar), newProduction(abc[i],LAMDA,LAMDA));
+
+	return;
+}
+
+void convertToRight(){
+
 
 }
-static void convertToRight(){
 
-}*/
+void grammarToFile(GrammarADT grammar){
+	FILE * fp = fopen("grammar.gr", "w");
+	if(fp == NULL){
+		printf("Error: File could not be created\n");
+		fclose(fp);
+		return;
+	}
 
-static int isTerminal(char symbol){
+	fprintf(fp, "G1 = ({");
+
+	int i;
+
+	for(i = 0; i < getQuantNonTerminals(grammar); i++)	{
+		fprintf(fp, "%c%s", getNonTerminals(grammar)[i], (i == getQuantNonTerminals(grammar)-1?"}":", "));
+	}
+
+	fprintf(fp, ", {");
+
+	for(i = 0; i < getQuantTerminals(grammar); i++)	{
+		fprintf(fp, "%c%s", getTerminals(grammar)[i], (i == getQuantTerminals(grammar)-1?"}":", "));
+	}
+
+	fprintf(fp, ", %c, {", getDistinguished(grammar));
+
+	for(i = 0; i < getQuant(getProductions(grammar)); i++){
+		fprintf(fp, "%c -> %c%c%s", getProductionComponent(getProduction(getProductions(grammar), i), 0),
+				getProductionComponent(getProduction(getProductions(grammar), i), 1),
+				getProductionComponent(getProduction(getProductions(grammar), i), 2),
+				(i == getQuant(getProductions(grammar))? "}": ", "));
+	}
+
+	fprintf(fp, ")");
+	fclose(fp);
+	return;
+
+}
+
+int isTerminal(char symbol){
 	return islower(symbol);
 }
 
-static int isNonTerminal(char symbol){
+int isNonTerminal(char symbol){
 	return isupper(symbol);
 }
 

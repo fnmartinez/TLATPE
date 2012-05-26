@@ -5,18 +5,7 @@
  *      Author: joseignaciosantiagogalindo
  */
 
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include "../include/Production.h"
-# include "../include/Productions.h"
-
-
-
-typedef struct Productions{
-	int n;
-	ProductionADT * productions;
-}Productions;
+#include "../include/Productions.h"
 
 /*Constructor-destructor*/
 ProductionsADT newProductions(int n){
@@ -35,11 +24,7 @@ int  getQuant(ProductionsADT productions){
 	return productions->n;
 }
 ProductionADT getProduction(ProductionsADT productions, int i){
-	char first = getProductionComponent(productions->productions[i],0);
-	char second = getProductionComponent(productions->productions[i],1);
-	char third = getProductionComponent(productions->productions[i], 2);
-	ProductionADT p = newProduction(first, second, third);
-	return p;
+	return productions->productions[i];
 
 }
 

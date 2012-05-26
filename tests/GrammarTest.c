@@ -4,11 +4,12 @@
  *  Created on: May 14, 2012
  *      Author: joseignaciosantiagogalindo
  */
-# include <stdio.h>
-# include <stdlib.h>
-# include "../include/Grammar.h"
-# include "../include/Productions.h"
-# include "../include/Production.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include "../include/Converter.h"
+#include "../include/Grammar.h"
+#include "../include/Productions.h"
+#include "../include/Production.h"
 
 
 void init();
@@ -18,6 +19,7 @@ void grammarToAutomata();
 void removeProductionsTest();
 void addProductionsTest();
 void removeUnreachableProductionsTest();
+void removeOnlyRightTerminalsTest();
 
 ProductionsADT prods;
 GrammarADT g1;
@@ -38,8 +40,9 @@ int main(void)
 	basicTest();
 	//grammarToAutomata();
 	addProductionsTest();
-	removeProductionsTest();
-	removeUnreachableProductionsTest();
+	//removeProductionsTest();
+	//removeUnreachableProductionsTest();
+	removeOnlyRightTerminalsTest();
 
 	destroy();
 	return 0;
@@ -63,7 +66,7 @@ void init(){
 	/*S-> aA*/
 	p1 = newProduction('S','a','A');
 	/*A-> b*/
-	p2 = newProduction('A','/','b');
+	p2 = newProduction('A','b',LAMDA);
 	/*B-> aB*/
 	p7 = newProduction('B','b','B');
 	/*A-> bA*/
@@ -139,3 +142,9 @@ void removeUnreachableProductionsTest(){
 
 }
 
+void removeOnlyRightTerminalsTest(){
+	printf("\nTesting Remove Only Right Terminals Method \n");
+	removeOnlyRightTerminals(g1);
+	printGrammar(g1);
+	printf("productions quant: %d\n", getQuant(getProductions(g1)));
+}

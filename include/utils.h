@@ -8,6 +8,9 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+# include <stdio.h>
+# include <string.h>
+# include <stdlib.h>
 
 int containsChar(char * array , int size, char c);
 int getDifferents( char * first,  int firstquant, char * sec, int secquant, char ** notinfirst);

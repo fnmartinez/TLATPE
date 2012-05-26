@@ -8,8 +8,13 @@
 #ifndef DERIVATION_H_
 #define DERIVATION_H_
 
-#include "Production.h"
+#include <stdio.h>
+#include <stdlib.h>
 #define DERVSIZE 3
+
+typedef struct Derivation{
+	char derivation[DERVSIZE];
+}Derivation;
 
 typedef struct Derivation * DerivationADT;
 

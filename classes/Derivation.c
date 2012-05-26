@@ -5,16 +5,7 @@
  *      Author: joseignaciosantiagogalindo
  */
 
-# include <stdio.h>
-# include <stdlib.h>
-# include "../include/Derivation.h"
-# include "../include/Production.h"
-
-typedef struct Derivation{
-	char derivation[DERVSIZE];
-}Derivation;
-
-ProductionADT toProduction(DerivationADT d);
+#include "../include/Derivation.h"
 
 
 DerivationADT newDerivation(char first, char sec, char third){
@@ -44,12 +35,6 @@ char getDerivationComponent(DerivationADT p, int i){
 void setDerivationComponent(DerivationADT p, int i, char comp){
 	p->derivation[i] = comp;
 	return;
-}
-
-/*Conversion*/
-ProductionADT toProduction(DerivationADT d){
-	return newProduction( getDerivationComponent(d,0),getDerivationComponent(d,1),
-			getDerivationComponent(d,2) );
 }
 
 /*Utility*/

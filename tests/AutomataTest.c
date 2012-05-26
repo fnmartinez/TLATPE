@@ -4,13 +4,14 @@
  *  Created on: May 14, 2012
  *      Author: joseignaciosantiagogalindo
  */
-# include <stdio.h>
-# include <stdlib.h>
-# include <string.h>
-# include "../include/Automata.h"
-# include "../include/Grammar.h"
-# include "../include/Productions.h"
-# include "../include/Production.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../include/Converter.h"
+#include "../include/Automata.h"
+#include "../include/Grammar.h"
+#include "../include/Productions.h"
+#include "../include/Production.h"
 
 void init();
 void destroy();

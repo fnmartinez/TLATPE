@@ -8,10 +8,17 @@
 #ifndef DERIVATIONS_H_
 #define DERIVATIONS_H_
 
-# include "Derivation.h"
-# include "TADS.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "Derivation.h"
 
+typedef struct Derivations{
+	int n;
+	DerivationADT * derivations;
+}Derivations;
 
+typedef struct Derivations * DerivationsADT;
 
 /*Constructor-destructor*/
 DerivationsADT newDerivations(int n);

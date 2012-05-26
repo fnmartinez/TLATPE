@@ -5,17 +5,7 @@
  *      Author: joseignaciosantiagogalindo
  */
 
-# include <stdio.h>
-# include <stdlib.h>
 # include "../include/Production.h"
-# include "../include/Derivation.h"
-
-
-typedef struct Production{
-	char production[PRODSIZE];
-}Production;
-
-DerivationADT toDerivation(ProductionADT p);
 
 /*Constructor-destructor*/
 ProductionADT newProduction(char first, char sec, char third){
@@ -45,12 +35,6 @@ char getProductionComponent(ProductionADT p, int i){
 void setProductionComponent(ProductionADT p, int i, char comp){
 	p->production[i] = comp;
 	return;
-}
-
-/*Conversion*/
-DerivationADT toDerivation(ProductionADT p){
-	return newDerivation( getProductionComponent(p,0),getProductionComponent(p,1),
-			getProductionComponent(p,2) );
 }
 
 /*Utility*/

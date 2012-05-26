@@ -577,358 +577,13 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "gr-parser.l"
-#line 2 "gr-parser.l"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <ctype.h>
-#include "../include/Grammar.h"
-#include "../include/Automata.h"
-
-#define INIT_QTY 10
-#ifndef LAMDA
-#define LAMDA '\\'
-#endif
-typedef struct prod_t prod_t;
-typedef struct prod_list_t prod_list_t;
-typedef prod_t * prod;
-typedef prod_list_t * prod_list;
-
-enum{
-	false,
-	true
-} bool;
-
-struct prod_t{
-	prod prev;
-	prod next;
-	char left;
-	char right[2];
-};
-struct prod_list_t{
-	prod head;
-	prod tail;
-	size_t size;
-};
-
-char * grammar_name;
+#line 1 "lex/gr-parser.l"
+#line 2 "lex/gr-parser.l"
+#include "src/gr-parser.h"
 char previous;
 int h, k;
-
-char * terminals;
-int term_size;
-int term_qty;
-char * non_terminals;
-int nterm_size;
-int nterm_qty;
-char distinguished;
-prod_list productions;
-int valid_name, valid_grammar, valid_nt, valid_t, valid_d, valid_p;
-
-int exists(char * s, char c, size_t l)
-{
-	int i;
-	for(i = 0; i<l && s[i] != c; i++);
-	return i < l;
-}
-prod_list new_prod_list()
-{
-	prod_list pl = malloc(sizeof(prod_list_t));
-	pl->size = 0;
-	pl->head = NULL;
-	pl->tail = NULL;
-	return pl;
-}
-
-prod new_prod(char left, char r1, char r2)
-{
-	prod p = malloc(sizeof(prod_t));
-	p->left = left;
-	p->right[0] = r1;
-	p->right[1] = r2;
-	return p;
-}
-
-int add_to_list(prod_list pl, prod p)
-{
-	if(pl == NULL || p == NULL)
-	{
-		return 0;
-	}
-	
-	if(pl->size == 0)
-	{
-		pl->head = p;
-		pl->tail = p;
-		p->next = p->prev = NULL;
-	}
-	else
-	{
-		pl->tail->next = p;
-		p->prev = pl->tail;
-		pl->tail = p;
-		p->next = NULL;
-	}
-	pl->size++;
-	return 1;
-}
-
-prod pop_prod(prod_list pl)
-{
-	if(pl == NULL || pl->size == 0)
-	{
-		return NULL;
-	}
-	
-	prod p = pl->head;
-	pl->head = pl->head->next;
-	if(pl->head == NULL)
-	{
-		pl->tail = NULL;
-	}
-	else
-	{
-		pl->head->prev = NULL;
-	}
-	pl->size--;
-	return p;
-}
-
-void destroy_prod(prod p)
-{
-	if(p == NULL)
-	{
-		return;
-	}
-	free(p);
-}
-
-void destroy_prod_list(prod_list pl)
-{
-	if(pl == NULL)
-	{
-		return;
-	}
-	if(pl->size != 0)
-	{
-		while(pl->size>0)
-		{
-			destroy_prod(pop_prod(pl));			
-		}		
-	}
-	free(pl);
-}
-
-void add_terminal(char * s)
-{
-	int i = 0;
-	int l = strlen(s);
-	for(i=0; i<l && isspace(s[i]); i++);
-	
-	if(isupper(s[i]))
-	{
-		printf("Error: Invalid terminal. All terminal symbols must be lowercase letters.\n");
-		exit(1);
-	}
-	
-	if(!exists(terminals, s[i], term_qty))
-	{
-		if(term_size == term_qty)
-		{
-			char * aux;
-			aux = realloc(terminals, term_size *= 1.5);
-			if(aux == NULL)
-			{
-				printf("Error: Not enought memory!\n");
-				exit(1);
-			}
-			terminals = aux;
-		}
-		terminals[term_qty++] = s[i];
-	}
-	else
-	{
-		printf("Error: Repeated terminal symbols encountered.\n");
-		exit(1);
-	}
-}
-
-void add_non_terminal(char * s)
-{
-	int i = 0;
-	int l = strlen(s);
-	for(i=0; i<l && isspace(s[i]); i++);
-	
-	if(islower(s[i]))
-	{
-		printf("Error: Invalid non_terminal. All terminal symbol must be uppercase letters.\n");
-		exit(1);
-	}
-	
-	if(!exists(non_terminals, s[i], nterm_qty))
-	{
-		if(nterm_size == nterm_qty)
-		{
-			char * aux;
-			aux = realloc(non_terminals, term_size *= 1.5);
-			if(aux == NULL)
-			{
-				printf("Error: Not enought memory!\n");
-				exit(1);
-			}
-			non_terminals = aux;
-		}
-		non_terminals[nterm_qty++] = s[i];
-	}
-	else
-	{
-		printf("Error: Repeated non terminal symbol encountered.\n");
-		exit(1);
-	}
-}
-
-void add_production2(char le, char * s)
-{
-	int i;
-	char r1, r2;
-	int l = strlen(s);
-	for(i = 0; i<l && isspace(s[i]); i++);
-	r1 = s[i];
-	if(!exists(terminals, r1, term_qty) && !exists(non_terminals, r1, nterm_qty) && r1 != LAMDA)
-	{
-		printf("%c -> %c", le, r1);
-		printf("1Error: Invalid right-side production symbol\n");
-		exit(1);
-	}
-	for(i = i+1; i<l && isspace(s[i]); i++);
-	if(i < l && !ispunct(s[i]) && !isspace(s[i]))
-	{
-		r2 = s[i];
-		if(((!exists(terminals, r2, term_qty) && !exists(non_terminals, r2, nterm_qty)) && (r1 != LAMDA)) ||
-			((exists(terminals, r2, term_qty) || exists(non_terminals, r2, nterm_qty)) && (r1 == LAMDA)))
-		{
-			printf("Error: Invalid right-side production symbol\n");
-			exit(1);
-		}	
-	}
-	else
-	{
-		r2 = LAMDA;
-	}
-	add_to_list(productions, new_prod(le, r1, r2));
-}
-
-void add_production(char * s)
-{
-	int i;
-	int l = strlen(s);
-	for(i = 0; i<l && isspace(s[i]); i++);
-	char le = s[i];
-	if(islower(le) || !exists(non_terminals, s[i], nterm_qty))
-	{
-		printf("Error: Invalid left-side production symbol\n");
-		exit(1);
-	}
-	for(i = i+1; i<l && isspace(s[i]); i++);
-	for(i = i+1; i<l && isspace(s[i]); i++);
-	add_production2(le, s+i+1);
-	
-}
-
-void init()
-{
-	term_size 	= INIT_QTY;
-	term_qty 	= 0;
-	terminals 	= malloc(term_size*sizeof(char));
-	nterm_size 	= INIT_QTY;
-	nterm_qty 	= 0;
-	non_terminals 	= malloc(nterm_size*sizeof(char));
-	productions 	= new_prod_list();
-	valid_name 	= false;
-	valid_grammar 	= false;
-	valid_nt 	= false;
-	valid_t 	= false;
-	valid_d 	= false;
-	valid_p 	= false;
-}
-
-void printall()
-{
-	int i;
-	printf("G = <{");
-	for(i=0; i<nterm_qty; i++)
-	{
-		printf("%c%c ", non_terminals[i], (i== nterm_qty-1?' ':','));
-	}
-	printf("},{");
-	for(i=0; i<term_qty;i++)
-	{
-		printf("%c%c ", terminals[i], (i== term_qty-1?' ':','));
-	}
-	printf("}, ");
-	printf("%c, ", distinguished);
-	
-	prod p;
-	for(p=productions->head; p != NULL; p = p->next)
-	{
-		printf("%c -> %c%c, ", p->left, p->right[0], p->right[1]);
-	}
-	printf("}>\n");
-}
-
-void process()
-{
-	if(!valid_name)
-	{
-		printf("Error: Not a valid grammar identifier\n");
-		exit(1);
-	}
-	if(!valid_nt)
-	{
-		printf("Error: Invalid syntax. Non-terminal symbols not found\n");
-		exit(1);
-	}
-	if(!valid_t)
-	{
-		printf("Error: Invalid syntax. Terminals symbols not found\n");
-		exit(1);
-	}	
-	if(!valid_d)
-	{
-		printf("Error: Invalid syntax. Distinguished element not found\n");
-		exit(1);
-	}
-	if(!valid_p)
-	{
-		printf("Error: Invalid syntax. Productions not found\n");
-		exit(1);
-	}
-	if(!valid_grammar)
-	{
-		printf("Error: Malformed grammar\n");
-		exit(1);
-	}
-	
-	GrammarADT gr = newGrammar();
-	
-	setTerminals(gr, terminals, term_qty);
-	setNonTerminals(gr, non_terminals, nterm_qty);
-	setDistinguished(gr, distinguished);
-	
-	ProductionsADT ps = newProductions(0);
-	
-	prod p = NULL;
-	for(p = productions->head; p != NULL; p = p->next)
-	{
-		addProduction(ps, newProduction(p->left, p->right[0], p->right[1]));
-	}
-	
-	setProductions(gr, ps);
-	
-	printGrammar(gr);
-}
-
+extern int valid_name, valid_grammar, valid_nt, valid_t, valid_d, valid_p;
+extern char distinguished;
  
  
  
@@ -941,7 +596,7 @@ void process()
  
  
 
-#line 945 "lex.yy.c"
+#line 600 "lex.yy.c"
 
 #define INITIAL 0
 #define TO_VN 1
@@ -1140,9 +795,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 373 "gr-parser.l"
+#line 28 "lex/gr-parser.l"
 
-#line 1146 "lex.yy.c"
+#line 801 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -1228,7 +883,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 374 "gr-parser.l"
+#line 29 "lex/gr-parser.l"
 {for(h=0; h<yyleng && isspace(yytext[h]); h++);
 							 for(k=yyleng; k>0 && isspace(yytext[k]); k--);
 								BEGIN(TO_VN);}
@@ -1236,13 +891,13 @@ YY_RULE_SETUP
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 377 "gr-parser.l"
-valid_name = true;BEGIN(VN);
+#line 32 "lex/gr-parser.l"
+validate_name();BEGIN(VN);
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 378 "gr-parser.l"
+#line 33 "lex/gr-parser.l"
 {
 								add_non_terminal(yytext);
 								if(yytext[yyleng-1]==',')
@@ -1255,13 +910,13 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 386 "gr-parser.l"
-valid_nt = true;BEGIN(VT);
+#line 41 "lex/gr-parser.l"
+validate_non_terminals();BEGIN(VT);
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 387 "gr-parser.l"
+#line 42 "lex/gr-parser.l"
 {
 								add_terminal(yytext);
 								if(yytext[yyleng-1]==',')
@@ -1274,13 +929,13 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 395 "gr-parser.l"
-valid_t = true; BEGIN(DISTINGUISHED);
+#line 50 "lex/gr-parser.l"
+validate_terminals(); BEGIN(DISTINGUISHED);
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 396 "gr-parser.l"
+#line 51 "lex/gr-parser.l"
 {for(h=0; h<yyleng && isspace(yytext[h]); h++);
 								distinguished = yytext[h];
 								yytext[0]=yytext[h];
@@ -1290,13 +945,13 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 401 "gr-parser.l"
-valid_d = true;BEGIN(PRODUCTION);
+#line 56 "lex/gr-parser.l"
+validate_distinguished();BEGIN(PRODUCTION);
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 402 "gr-parser.l"
+#line 57 "lex/gr-parser.l"
 {
 													add_production(yytext);
 													if(yytext[yyleng-1]==',')
@@ -1315,7 +970,7 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 416 "gr-parser.l"
+#line 71 "lex/gr-parser.l"
 {
 								add_production2(previous, yytext);
 								if(yytext[yyleng-1]==',')
@@ -1333,26 +988,26 @@ YY_RULE_SETUP
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 429 "gr-parser.l"
-valid_p = valid_grammar = true;BEGIN(FIN);
+#line 84 "lex/gr-parser.l"
+validate_productions();validate_grammar();BEGIN(FIN);
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 430 "gr-parser.l"
+#line 85 "lex/gr-parser.l"
 ;
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 431 "gr-parser.l"
+#line 86 "lex/gr-parser.l"
 ;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 432 "gr-parser.l"
+#line 87 "lex/gr-parser.l"
 ECHO;
 	YY_BREAK
-#line 1356 "lex.yy.c"
+#line 1011 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(TO_VN):
 case YY_STATE_EOF(VN):
@@ -2362,7 +2017,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 432 "gr-parser.l"
+#line 87 "lex/gr-parser.l"
 
 
 

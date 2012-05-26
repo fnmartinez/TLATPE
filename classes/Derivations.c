@@ -5,15 +5,7 @@
  *      Author: joseignaciosantiagogalindo
  */
 
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
-# include "../include/Derivations.h"
-
-typedef struct Derivations{
-	int n;
-	DerivationADT * derivations;
-}Derivations;
+#include "../include/Derivations.h"
 
 /*Constructor-destructor*/
 DerivationsADT newDerivations(int n){

@@ -7,10 +7,29 @@
 
 #ifndef AUTOMATA_H_
 #define AUTOMATA_H_
+#ifndef LAMDA
+#define LAMDA '\\'
+#endif
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "Derivation.h"
 #include "Derivations.h"
-#include "Grammar.h"
-#include "TADS.h"
+#include "utils.h"
+
+typedef struct Automata{
+	DerivationsADT derivations;
+	char initialstate;
+	char * states;
+	char * finalstates;
+	char * symbols;
+	int quantstates;
+	int quantsymbols;
+	int quantfinalstates;
+}Automata;
+
+typedef struct Automata * AutomataADT;
 
 /*Constructor-destructor*/
 AutomataADT newAutomata(void);
@@ -37,9 +56,6 @@ void setDerivations(AutomataADT automata, DerivationsADT  derivations);
 /*Utility*/
 void printAutomata(AutomataADT automata);
 int lenght(char * array);
-
-/*Conversion*/
-GrammarADT toGrammar(AutomataADT automata);
 
 
 #endif /* AUTOMATA_H_ */

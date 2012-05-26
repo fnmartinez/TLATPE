@@ -5,13 +5,30 @@
  *      Author: joseignaciosantiagogalindo
  */
 
-#ifndef STRUCTURES_H_
-#define STRUCTURES_H_
+#ifndef GRAMMAR_H_
+#define GRAMMAR_H_
+#ifndef LAMDA
+#define LAMDA '\\'
+#endif
 
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
 #include "Productions.h"
-#include "Automata.h"
-#include "TADS.h"
+#include "Production.h"
+#include "utils.h"
 
+typedef struct Grammar{
+	ProductionsADT productions;
+	char * terminals;
+	char * nonterminals;
+	int quantterminals;
+	int quantnonterminals;
+	char distinguished;
+}Grammar;
+
+typedef struct Grammar * GrammarADT;
 
 /*Constructor-destructor*/
 GrammarADT newGrammar(void);
@@ -34,10 +51,10 @@ void setProductions(GrammarADT grammar,ProductionsADT productions);
 /*Utility*/
 void printGrammar(GrammarADT grammar);
 void removeUnreachableProductions(GrammarADT grammar);
-
-/*Conversion*/
-AutomataADT toAutomata(GrammarADT grammar);
-
+void removeOnlyRightTerminals(GrammarADT grammar);
+void grammarToFile(GrammarADT grammar);
+int isTerminal(char symbol);
+int isNonTerminal(char symbol);
 
 
 #endif /* STRUCTURES_H_ */

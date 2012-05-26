@@ -8,9 +8,13 @@
 #ifndef PRODUCTION_H_
 #define PRODUCTION_H_
 
-#include "Derivation.h"
+#include <stdio.h>
+#include <stdlib.h>
 #define PRODSIZE 3
 
+typedef struct Production{
+	char production[PRODSIZE];
+}Production;
 
 typedef struct Production * ProductionADT;
 

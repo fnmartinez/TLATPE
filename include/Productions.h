@@ -8,9 +8,17 @@
 #ifndef PRODUCTIONS_H_
 #define PRODUCTIONS_H_
 
-# include "Production.h"
-# include "TADS.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include "Production.h"
 
+typedef struct Productions{
+	int n;
+	ProductionADT * productions;
+}Productions;
+
+typedef struct Productions * ProductionsADT;
 
 /*Constructor-destructor*/
 ProductionsADT newProductions(int n);

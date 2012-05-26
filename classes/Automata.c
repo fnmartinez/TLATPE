@@ -5,28 +5,7 @@
  *      Author: joseignaciosantiagogalindo
  */
 
-# include <stdio.h>
-# include <string.h>
-# include <stdlib.h>
 # include "../include/Automata.h"
-# include "../include/Production.h"
-# include "../include/Productions.h"
-# include "../include/Derivation.h"
-# include "../include/Derivations.h"
-
-typedef struct Automata{
-	DerivationsADT derivations;
-	char initialstate;
-	char * states;
-	char * finalstates;
-	char * symbols;
-	int quantstates;
-	int quantsymbols;
-	int quantfinalstates;
-}Automata;
-
-ProductionADT toProduction(DerivationADT d);
-
 
 /*Constructor-destructor*/
 AutomataADT newAutomata(void){
@@ -115,27 +94,4 @@ void printAutomata(AutomataADT automata){
 		printDerivations(getDerivations(automata));
 		return;
 }
-
-/*Conversion*/
-GrammarADT toGrammar(AutomataADT automata){
-	GrammarADT g = newGrammar();
-	setNonTerminals(g,getStates(automata), getQuantStates(automata));
-	setTerminals(g, getSymbols(automata), getQuantSymbols(automata));
-	setDistinguished(g,getInitialstate(automata));
-	DerivationsADT derivations = getDerivations(automata);
-	int n = getDerivationsQuant(derivations);
-	int quantfinals = getQuantFinalStates(automata);
-	int i;
-	ProductionsADT prods = newProductions(n+quantfinals);
-	for (i=0; i<n; i++){
-		setProduction(prods,i,toProduction(getDerivation(derivations,i)));
-	}
-	/*if P is in F , the production P->/ should be included*/
-	for(; i-n<quantfinals; i++){
-		setProduction(prods,i,newProduction(getFinalStates(automata)[i-n],'/','/'));
-	}
-	setProductions(g,prods);
-	return g;
-}
-
 
