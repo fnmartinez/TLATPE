@@ -144,7 +144,8 @@ AutomataADT toAutomata(GrammarADT grammar){
 	setDerivations(a,derivations);
 	return a;
 }
-/*
+
+
 static void removeUnitaryProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
 	int i, n = getQuant(productions), unitaryquant = 0;
@@ -163,15 +164,16 @@ static void removeUnitaryProductions(GrammarADT grammar){
 		}
 	}
 }
-*/
+
 
 void removeUnreachableProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
 	int i, quantproductions = getQuant(productions), reachablesquant=0,lastreachablesquant=0;
 	char * reachables = malloc(sizeof(char));
 	char * aux1 = NULL;
-	/*starts only with distinguished symbol*/
-	if(1/*S is in the current productions*/){
+	/*starts only with distinguished symbol, if it is in the current productions*/
+	if(inCurrentProductions(productions,getDistinguished(grammar))){
+		printf("\n\n HEREEEEEE: %d",inCurrentProductions(productions,getDistinguished(grammar)));
 		reachables[reachablesquant++] = getDistinguished(grammar);
 	}
 	/*until something the quantity of reachables varies*/

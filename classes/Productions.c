@@ -99,9 +99,16 @@ void removeProduction(ProductionsADT productions, char leftsymbol){
 		}
 	}
 }
-/*int inCurrentProductions(ProductionsADT productions, char c){
-	int quantproductions =
-}*/
+int inCurrentProductions(ProductionsADT productions, char c){
+	int quantproductions = getQuant(productions),i;
+	for (i=0; i<quantproductions; i++){
+		char first = getProductionComponent(getProduction(productions,i),0);
+		if ( first == c ){
+			return 1;
+		}
+	}
+	return 0;
+}
 
 
 

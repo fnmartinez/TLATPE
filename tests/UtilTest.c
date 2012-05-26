@@ -12,17 +12,37 @@
 
 void containsCharTest();
 void getDifferentsTest();
+void addPairTest();
+void containsPairTest();
 
 char array1[5] = {'A','B','C','D','E'};
 char array2[3] = {'A','B','C'};
 char * array3;
-
+char * unitaries;
+int unitaiessize=0;
 int main(){
 	containsCharTest();
 	getDifferentsTest();
+	addPairTest();
+	containsPairTest();
 	return 0;
 }
 
+void addPairTest(){
+	addPair(&unitaries,&unitaiessize,'A','B');
+	printf("curr size: %d\n", unitaiessize);
+	addPair(&unitaries,&unitaiessize,'C','D');
+	printf("curr size: %d\n", unitaiessize);
+	addPair(&unitaries,&unitaiessize,'E','F');
+	printf("curr size: %d\n", unitaiessize);
+	printByPairs(unitaries,unitaiessize);
+}
+
+void containsPairTest(){
+	printf("contains (C,D): %d \n", containsPair(unitaries,unitaiessize,'C','D'));
+	printf("contains (D,E): %d \n", containsPair(unitaries,unitaiessize,'D','E'));
+	printf("contains (A,B): %d \n", containsPair(unitaries,unitaiessize,'A','B'));
+}
 
 
 void containsCharTest(){

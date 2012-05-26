@@ -37,8 +37,8 @@ int main(void)
 	init();
 	basicTest();
 	//grammarToAutomata();
-	removeProductionsTest();
 	addProductionsTest();
+	removeProductionsTest();
 	removeUnreachableProductionsTest();
 
 	destroy();
