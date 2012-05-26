@@ -311,5 +311,9 @@ void process()
 	
 	setProductions(gr, ps);
 	
+	AutomataADT at = toAutomata(gr);
+
+	toFile(gr);
+	toDot(at);
 	printGrammar(gr);
 }

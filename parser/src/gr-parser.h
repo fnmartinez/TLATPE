@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "../../include/Converter.h"
 #include "../../include/Grammar.h"
 #include "../../include/Automata.h"
 
