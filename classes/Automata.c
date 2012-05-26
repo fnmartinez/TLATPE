@@ -108,65 +108,74 @@ int isFinal(AutomataADT automata, char c){
 
 void toDot(AutomataADT automata){
 	FILE *p = NULL;
-	  char *file = "./out.dot";
-	  char buffer[80] = "digraph{\r\n";
-	  size_t len = 0;
-	  p = fopen(file, "w");
-	  if (p== NULL) {
-	  printf("Error in opening a file..%s", file);
-	  }
-	  len = strlen(buffer);
-	  fwrite(buffer, len, 1, p);
-		int i, statesCount = getQuantStates(automata);
-		char* states = getStates(automata);
-		char c = getInitialstate(automata);
-		
-			if(isFinal(automata,states[i])){
-				strcpy(buffer,"node[shape=doublecircle] Node4 [label=\"4\"];\r\n");
-				buffer[29]=c;
-				buffer[39]=c;
-			}else{
-				strcpy(buffer,"node[shape=circle] Node3 [label=\"3\"];\r\n");
-				buffer[23]=c;
-				buffer[33]=c;
-			}
-		fwrite(buffer, strlen(buffer), 1, p);
-		
-		for(i=0;i<statesCount;i++){
-			if(states[i]!=c){
-				if(isFinal(automata,states[i])){
-					strcpy(buffer,"node[shape=doublecircle] Node4 [label=\"4\"];\r\n");
-					buffer[29]=states[i];
-					buffer[39]=states[i];
-				}else{
-					strcpy(buffer,"node[shape=circle] Node3 [label=\"3\"];\r\n");
-					buffer[23]=states[i];
-					buffer[33]=states[i];
-				}
-			fwrite(buffer, strlen(buffer), 1, p);
-			}
-		}
-		DerivationsADT derivations = getDerivations(automata);
-		int n = getDerivationsQuant(derivations);
-		for (i=0; i<n; i++){
-			DerivationADT d = getDerivation(derivations,i);
-			if(getDerivationComponent(d,1)=='\\'){
-				strcpy(buffer,"Node0->Node1 [label=\"\\\\\"];\r\n");
-				buffer[4]=getDerivationComponent(d,0);
-				buffer[11]=getDerivationComponent(d,2);
-			}else{
-				strcpy(buffer,"Node0->Node1 [label=\"a\"];\r\n");
-				buffer[4]=getDerivationComponent(d,0);
-				buffer[11]=getDerivationComponent(d,2);
-				buffer[21]=getDerivationComponent(d,1);
+	char *file = "./out.dot";
+	char buffer[80] = "digraph{\r\n";
+	size_t len = 0;
+
+	p = fopen(file, "w");
+
+	if (p == NULL) {
+		printf("Error in opening a file..%s", file);
+	}
+
+	len = strlen(buffer);
+
+	fwrite(buffer, len, 1, p);
+
+	int i, statesCount = getQuantStates(automata);
+	char* states = getStates(automata);
+	char c = getInitialstate(automata);
+
+	if (isFinal(automata, states[i])) {
+		strcpy(buffer, "node[shape=doublecircle] Node4 [label=\"4\"];\r\n");
+		buffer[29] = c;
+		buffer[39] = c;
+	} else {
+		strcpy(buffer, "node[shape=circle] Node3 [label=\"3\"];\r\n");
+		buffer[23] = c;
+		buffer[33] = c;
+	}
+
+	fwrite(buffer, strlen(buffer), 1, p);
+
+	for (i = 0; i < statesCount; i++) {
+		if (states[i] != c) {
+			if (isFinal(automata, states[i])) {
+				strcpy(buffer,
+						"node[shape=doublecircle] Node4 [label=\"4\"];\r\n");
+				buffer[29] = states[i];
+				buffer[39] = states[i];
+			} else {
+				strcpy(buffer, "node[shape=circle] Node3 [label=\"3\"];\r\n");
+				buffer[23] = states[i];
+				buffer[33] = states[i];
 			}
 			fwrite(buffer, strlen(buffer), 1, p);
 		}
-		strcpy(buffer,"}\r\n");
+	}
+
+	DerivationsADT derivations = getDerivations(automata);
+	int n = getDerivationsQuant(derivations);
+
+	for (i = 0; i < n; i++) {
+		DerivationADT d = getDerivation(derivations, i);
+		if (getDerivationComponent(d, 1) == '\\') {
+			strcpy(buffer, "Node0->Node1 [label=\"\\\\\"];\r\n");
+			buffer[4] = getDerivationComponent(d, 0);
+			buffer[11] = getDerivationComponent(d, 2);
+		} else {
+			strcpy(buffer, "Node0->Node1 [label=\"a\"];\r\n");
+			buffer[4] = getDerivationComponent(d, 0);
+			buffer[11] = getDerivationComponent(d, 2);
+			buffer[21] = getDerivationComponent(d, 1);
+		}
 		fwrite(buffer, strlen(buffer), 1, p);
-	  fclose(p);
-	  printf("\nWritten Successfuly in the file.\n");
-	 
+	}
+
+	strcpy(buffer, "}\r\n");
+	fwrite(buffer, strlen(buffer), 1, p);
+	fclose(p);
+	printf("\nWritten Successfuly in the file.\n");
 }
 
 
