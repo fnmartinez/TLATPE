@@ -302,7 +302,7 @@ void convertToRight(GrammarADT grammar){
 	}
 }
 
-void grammarToFile(GrammarADT grammar){
+void toFile(GrammarADT grammar){
 	FILE * fp = fopen("grammar.gr", "w");
 	if(fp == NULL){
 		printf("Error: File could not be created\n");

@@ -59,7 +59,7 @@ void removeUnitaryProductions(GrammarADT grammar);
 void removeUnreachableProductions(GrammarADT grammar);
 void removeOnlyRightTerminals(GrammarADT grammar);
 void convertToRight(GrammarADT grammar);
-void grammarToFile(GrammarADT grammar);
+void toFile(GrammarADT grammar);
 int isTerminal(char symbol);
 int isNonTerminal(char symbol);
 

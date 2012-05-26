@@ -57,5 +57,8 @@ void setDerivations(AutomataADT automata, DerivationsADT  derivations);
 void printAutomata(AutomataADT automata);
 int lenght(char * array);
 
+/*Conversion*/
+void toDot(AutomataADT automata);
+GrammarADT toGrammar(AutomataADT automata);
 
 #endif /* AUTOMATA_H_ */

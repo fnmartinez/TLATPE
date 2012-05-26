@@ -8,5 +8,7 @@ echo af3.dot;
 cat files/af3.dot | ./parser
 echo af2.dot;
 cat files/af2.dot | ./parser
+dot out.dot -Tjpg > g.jpg
+rm g.jpg
 rm lex.yy.c
 rm parser

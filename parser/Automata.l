@@ -7,6 +7,7 @@
 #include "../include/TADS.h"
 
 
+
 	char* states;
 	char* finalStates;
 	char* symbols;
@@ -168,7 +169,7 @@ second_trans_node "->Node"
 
 
 int
-main()
+main(int argc, char **argv)
 {
 	int i;
 	nodes = calloc(100,1);
@@ -198,8 +199,8 @@ main()
 			}
 		}
 		setFinalStates( autom,finalStates,finalCount);
-		setStates( autom,states,symbolsCount);
-		setSymbols( autom,symbols,2);
+		setStates( autom,states,node+1);
+		setSymbols( autom,symbols,symbolsCount);
 
 		derivations = newDerivations(der+1);
 		for(i=0;i<=der;i++){
@@ -209,12 +210,22 @@ main()
 		setDerivations( autom,derivations);
 		printAutomata( autom);
 		/*sudo gcc -g -Wall -ansi lex.yy.c -lfl ../classes/Production.c ../classes/Derivation.c ../classes/Derivations.c ../classes/Productions.c ../classes/Grammar.c ../classes/Automata.c -o test */
-		int pid = fork();
-		if(pid==0){
-			char*argv;
-			int envp=0;
-			execve("./dot files/af1.dot -Tjpg > g.jpg", argv, envp);
-			}
+		toDot(autom);
+	/*	graph_t *g, *prev = NULL;
+		GVC_t *gvc;
+		gvc = gvContext();
+		gvParseArgs(gvc, argc, argv);
+		while ((g = gvNextInputGraph(gvc))) {
+		if (prev) {
+		gvFreeLayout(gvc, prev);
+		agclose(prev);Graphviz Drawing Library Manual, April 25, 2012 43
+		}
+		gvLayoutJobs(gvc, g);
+		gvRenderJobs(gvc, g);
+		prev = g;
+		}
+		return (gvFreeContext(gvc));*/
+		
 	}else{
 		printf("No se pudo cargar el archivo.");
 	}
