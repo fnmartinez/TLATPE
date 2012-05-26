@@ -32,7 +32,7 @@ char getProductionComponent(ProductionADT p, int i);
 void setProductionComponent(ProductionADT p, int i, char comp);
 
 /*Utility*/
-void printProduction(ProductionADT p, int i);
+void printProduction(ProductionADT p);
 int equals(ProductionADT p1, ProductionADT p2);
 int isUnitary(ProductionADT p);
 

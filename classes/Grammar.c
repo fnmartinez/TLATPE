@@ -80,7 +80,8 @@ void printGrammar(GrammarADT grammar){
 void removeUnitaryProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
 	int i,j,k, productionquant = getQuant(productions), unitaryquant = 0, lastunitaryquant = 0;
-	char * unitaries;/*auxiliar array*/
+	/*auxiliar array for unitary productions*/
+	char * unitaries = NULL;
 	/*iterate over productions and determine first unitaries*/
 	for (i=0; i< productionquant; i++){
 		char first = getProductionComponent(getProduction(productions,i),0);
@@ -112,18 +113,21 @@ void removeUnitaryProductions(GrammarADT grammar){
 		}
 	}
 	printByPairs(unitaries,unitaryquant);
+	printf("unitaries quant: %d\n", unitaryquant/2);
 	/*create the new productions and remove the unitaries*/
 	for(i=0; i<productionquant; i++){
 		ProductionADT p1 = getProduction(productions,i);
 		if ( isUnitary(p1) ){
 			char first1 = getProductionComponent(p1,0);
+			char sec1 = getProductionComponent(p1,1);
+			char third1 = getProductionComponent(p1,2);
 			for(j=0;j<unitaryquant;j+=2){
 				char uni1 = unitaries[j];
 				char uni2 = unitaries[j+1];
-				/*A->B and (A,B)*/
-				if (first1 == uni1){
+				//A->B and (A,B)
+				if ((first1 == uni1) && (sec1 == uni2 || third1 == uni2 )){
 					for(k=0; k<productionquant; k++ ){
-						ProductionADT p2 = getProduction(productions,i);
+						ProductionADT p2 = getProduction(productions,k);
 						char first2 = getProductionComponent(p2,0);
 						char sec2 = getProductionComponent(p2,1);
 						char third2 = getProductionComponent(p2,2);
@@ -136,6 +140,7 @@ void removeUnitaryProductions(GrammarADT grammar){
 				}
 			}
 			removeParticularProduction(productions,p1);
+			free(p1);
 		}
 	}
 
@@ -150,7 +155,6 @@ void removeUnreachableProductions(GrammarADT grammar){
 	char * aux1 = NULL;
 	/*starts only with distinguished symbol, if it is in the current productions*/
 	if(inCurrentProductions(productions,getDistinguished(grammar))){
-		printf("\n\n HEREEEEEE: %d",inCurrentProductions(productions,getDistinguished(grammar)));
 		reachables[reachablesquant++] = getDistinguished(grammar);
 	}
 	/*until something the quantity of reachables varies*/
@@ -251,14 +255,14 @@ void removeOnlyRightTerminals(GrammarADT grammar){
 		if(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 1)) &&
 				getProductionComponent(getProduction(getProductions(grammar),j), 2) == LAMDA )
 		{
-			printProduction(getProduction(getProductions(grammar),j),0);
+			printProduction(getProduction(getProductions(grammar),j));
 			setProductionComponent(getProduction(getProductions(grammar),j), 2, getProductionComponent(getProduction(getProductions(grammar),j), 1));
 			setProductionComponent(getProduction(getProductions(grammar),j), 1, abc[i]);
 		}
 		if(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 2)) &&
 				getProductionComponent(getProduction(getProductions(grammar),j), 1) == LAMDA )
 		{
-			printProduction(getProduction(getProductions(grammar),j),0);
+			printProduction(getProduction(getProductions(grammar),j));
 			setProductionComponent(getProduction(getProductions(grammar),j), 1, abc[i]);
 		}
 	}

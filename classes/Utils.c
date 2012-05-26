@@ -49,14 +49,15 @@ void printArray(char * array, int size){
 
 void addPair(char ** unitaries, int * size,char first, char sec ){
 	char * aux = NULL;
-	if (!containsPair(*unitaries,*size,first,sec)){
-		if ( ( aux = realloc(*unitaries, sizeof(char)*(2+(*size))) ) == NULL ){
+	int n = *size;
+	if (!containsPair(*unitaries,n ,first,sec)){
+		if ( ( aux = realloc(*unitaries, sizeof(char)*(n+2)) ) == NULL ){
 			fprintf(stderr, "Error doing realloc \n");
 		}
-		*unitaries = aux;
-		(*unitaries)[*size] = first;
-		(*unitaries)[(*size)+1] = sec;
-		(*size) = (*size) +2;
+		(*unitaries) = aux;
+		(*unitaries)[n] = first;
+		(*unitaries)[n+1] = sec;
+		(*size) = n +2;
 	}
 }
 

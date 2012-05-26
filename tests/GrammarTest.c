@@ -150,7 +150,10 @@ void removeUnreachableProductionsTest(){
 }
 
 void removeUnitaryProductionsTest(){
+	printf("\nTesting Remove Unitary Productions Method \n");
 	removeUnitaryProductions(g1);
+	printGrammar(g1);
+	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
 
 void removeOnlyRightTerminalsTest(){

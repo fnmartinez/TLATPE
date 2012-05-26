@@ -38,7 +38,7 @@ void printProductions(ProductionsADT productions){
 	printf("Productions: { \n");
 	int i;
 	for(i=0; i<getQuant(productions);i++){
-		printProduction(getProduction(productions,i),i);
+		printProduction(getProduction(productions,i));
 	}
 	printf("}\n");
 }

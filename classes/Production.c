@@ -38,7 +38,7 @@ void setProductionComponent(ProductionADT p, int i, char comp){
 }
 
 /*Utility*/
-void printProduction(ProductionADT p, int i){
+void printProduction(ProductionADT p){
 	printf("\t %c -> %c%c\n", p->production[0],p->production[1],p->production[2]);
 	return;
 }
