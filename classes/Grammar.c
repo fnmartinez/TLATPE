@@ -59,7 +59,6 @@ void setProductions(GrammarADT grammar,ProductionsADT productions){
 
 /*Utility*/
 void printGrammar(GrammarADT grammar){
-
 	printf("Grammar\n");
 	printf("Distinguished: %c \n",getDistinguished(grammar));
 	int i ;
@@ -74,6 +73,7 @@ void printGrammar(GrammarADT grammar){
 	}
 	printf("}\n");
 	printProductions(getProductions(grammar));
+	printf("\nProduction Quant %d\n",getQuant(getProductions(grammar)));
 	return;
 }
 

@@ -311,9 +311,16 @@ void process()
 	
 	setProductions(gr, ps);
 	
+	printf("Grammar before Conversion\n");
+	printGrammar(gr);
+
 	AutomataADT at = toAutomata(gr);
 
+	printf("Grammar after Conversion\n");
 	printGrammar(gr);
+
+	printf("Resultung Automata\n");
 	printAutomata(at);
+
 	toDot(at);
 }

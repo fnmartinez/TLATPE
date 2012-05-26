@@ -16,10 +16,10 @@ void formalize(GrammarADT grammar){
 	removeUnreachableProductions(grammar);
 
 	/*all productions must be in the form A-Ba or A-> /*/
-	removeOnlyRightTerminals(grammar);
+	//removeOnlyRightTerminals(grammar);
 
 	/*the grammar must be right*/
-	convertToRight(grammar);
+	//convertToRight(grammar);
 
 	/*AGAIN : unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);
@@ -40,6 +40,9 @@ AutomataADT toAutomata(GrammarADT grammar){
 
 	/*the automata´s inital state is equal to the grammar distinguished symbol*/
 	setInitialstate(a, getDistinguished(grammar));
+
+	/*formalization*/
+	formalize(grammar);
 
 	/*to automata conversion*/
 	ProductionsADT productions = getProductions(grammar);
