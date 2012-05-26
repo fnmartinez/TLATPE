@@ -1,0 +1,3 @@
+flex -o grammar.yy.c parser/lex/gr-parser.l
+gcc -Wall -g -o grammar ./classes/Automata.c ./classes/Converter.c ./classes/Derivation.c ./classes/Derivations.c ./classes/Grammar.c ./classes/Production.c ./classes/Productions.c ./classes/Utils.c ./parser/src/gr-parser.c ./grammar.yy.c -lfl
+rm -f grammar.yy.c
