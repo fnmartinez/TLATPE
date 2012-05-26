@@ -18,6 +18,8 @@ void grammarToAutomata();
 void removeProductionsTest();
 void addProductionsTest();
 void removeUnreachableProductionsTest();
+void removeUnitaryProductionsTest();
+
 
 ProductionsADT prods;
 GrammarADT g1;
@@ -38,8 +40,10 @@ int main(void)
 	basicTest();
 	//grammarToAutomata();
 	addProductionsTest();
-	removeProductionsTest();
-	removeUnreachableProductionsTest();
+	//removeProductionsTest();
+	//removeUnreachableProductionsTest();
+	removeUnitaryProductionsTest();
+
 
 	destroy();
 	return 0;
@@ -75,7 +79,7 @@ void init(){
 	/*A-> bB*/
 	p5 = newProduction('A','b','B');
 	/*A-> aB*/
-	p6 = newProduction('A','b','B');
+	p6 = newProduction('A','/','B');
 
 
 	prods = newProductions(8);
@@ -116,17 +120,17 @@ void grammarToAutomata(){
 
 void removeProductionsTest(){
 	printf("\nTesting Remove Productions Method \n");
-	printf("to remove: all starting with 'S' \n");
-	removeProduction(getProductions(g1),'S');
+	printf("to remove: all starting with 'A' \n");
+	removeProduction(getProductions(g1),'A');
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
 
 void addProductionsTest(){
 	printf("\nTesting Add Productions Method \n");
-	addProduction(getProductions(g1), newProduction('C','C','C'));
-	addProduction(getProductions(g1), newProduction('S','B','/'));
-	addProduction(getProductions(g1), newProduction('B','B','B'));
+	addProduction(getProductions(g1), newProduction('S','/','A'));
+	addProduction(getProductions(g1), newProduction('B','/','C'));
+	addProduction(getProductions(g1), newProduction('C','/','D'));
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
@@ -136,6 +140,8 @@ void removeUnreachableProductionsTest(){
 	removeUnreachableProductions( g1 );
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
-
 }
 
+void removeUnitaryProductionsTest(){
+	removeUnitaryProductions(g1);
+}

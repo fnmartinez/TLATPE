@@ -18,7 +18,6 @@
 # include "../include/TADS.h"
 # include "../include/utils.h"
 
-static void removeOnlyRightTerminals(GrammarADT grammar);
 DerivationADT toDerivation(ProductionADT p);
 static int isTerminal(char symbol);
 static int isNonTerminal(char symbol);
@@ -146,23 +145,54 @@ AutomataADT toAutomata(GrammarADT grammar){
 }
 
 
-static void removeUnitaryProductions(GrammarADT grammar){
+void removeUnitaryProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
-	int i, n = getQuant(productions), unitaryquant = 0;
+	int i,j, n = getQuant(productions), unitaryquant = 0, lastunitaryquant = 0;
 	char * unitaries;//auxiliar array
-	for (i=0; i<n; i++ ){
-		if (  getProductionComponent(getProduction(productions,i),1) == '/' &&
-				isNonTerminal(getProductionComponent(getProduction(productions,i),2)) ) {
-			unitaries = realloc(unitaries, sizeof(char)*(unitaryquant+1)*2);
-			unitaries[unitaryquant*2] = getProductionComponent(getProduction(productions,i),0);
-			unitaries[(unitaryquant*2)+1] =  getProductionComponent(getProduction(productions,i),2);
-		}else if( isNonTerminal(getProductionComponent(getProduction(productions,i),1))  &&
-					getProductionComponent(getProduction(productions,i),2) == '/'  ){
-			unitaries = realloc(unitaries, sizeof(char)*(unitaryquant+1)*2);
-			unitaries[unitaryquant*2] = getProductionComponent(getProduction(productions,i),0);
-			unitaries[(unitaryquant*2)+1] =  getProductionComponent(getProduction(productions,i),1);
+	/*iterate over productions and determine first unitaries*/
+	for (i=0; i< n; i++){
+		char first = getProductionComponent(getProduction(productions,i),0);
+		char sec = getProductionComponent(getProduction(productions,i),1);
+		char third = getProductionComponent(getProduction(productions,i),2);
+		if ( isNonTerminal(sec) && third == '/' ){
+			addPair(&unitaries,&unitaryquant,first, sec);
+		}else if( isNonTerminal(third) && sec == '/'){
+			addPair(&unitaries,&unitaryquant,first, third);
 		}
 	}
+	/*iterate over unitaries, adding the closure*/
+	while(unitaryquant != lastunitaryquant){
+		lastunitaryquant = unitaryquant;
+		for (i=0; i<unitaryquant ; i+=2){
+			char first1 = unitaries[i];
+			char sec1 = unitaries[i+1];
+			for (j=0; j<unitaryquant ; j+=2){
+				char first2 = unitaries[j];
+				char sec2 = unitaries[j+1];
+				/*(A,B)(B,C)-> (A,C)*/
+				if (sec1 == first2 ){
+					if (!containsPair(unitaries,unitaryquant,first1,sec2) &&
+							first1 != sec2 ){
+						addPair(&unitaries,&unitaryquant,first1,sec2);
+					}
+				}
+			}
+		}
+	}
+	printByPairs(unitaries,unitaryquant);
+	for(i=0; i<n; i++){
+		char first1 = getProductionComponent(getProduction(productions,i),1);
+		char sec1 = getProductionComponent(getProduction(productions,i),2);
+		for(j=0; j<n; j++){
+			char first2 = getProductionComponent(getProduction(productions,i),1);
+			char sec2 = getProductionComponent(getProduction(productions,i),2);
+			if ( sec1 == first2 ){
+
+			}
+		}
+	}
+
+
 }
 
 

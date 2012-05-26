@@ -66,3 +66,12 @@ int equals(ProductionADT p1, ProductionADT p2){
 	}
 	return 0;
 }
+int isUnitary(ProductionADT p){
+	int first = getProductionComponent(p,0);
+	int sec = getProductionComponent(p,1);
+	int third = getProductionComponent(p,2);
+	if (first == sec || first == third){
+		return 1;
+	}
+	return 0;
+}

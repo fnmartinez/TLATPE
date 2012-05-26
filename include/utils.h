@@ -8,6 +8,7 @@
 #ifndef UTILS_H_
 #define UTILS_H_
 
+// sudo gcc -g -Wall  UtilTest.c ../classes/Utils.c -o utils
 
 int containsChar(char * array , int size, char c);
 int getDifferents( char * first,  int firstquant, char * sec, int secquant, char ** notinfirst);
