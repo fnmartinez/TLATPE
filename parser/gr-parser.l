@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "../include/Grammar.h"
+#include "../include/Automata.h"
+
 #define INIT_QTY 10
 #ifndef LAMDA
 #define LAMDA '\\'
@@ -11,6 +14,11 @@ typedef struct prod_t prod_t;
 typedef struct prod_list_t prod_list_t;
 typedef prod_t * prod;
 typedef prod_list_t * prod_list;
+
+enum{
+	false,
+	true
+} bool;
 
 struct prod_t{
 	prod prev;
@@ -36,6 +44,7 @@ int nterm_size;
 int nterm_qty;
 char distinguished;
 prod_list productions;
+int valid_name, valid_grammar, valid_nt, valid_t, valid_d, valid_p;
 
 int exists(char * s, char c, size_t l)
 {
@@ -249,13 +258,19 @@ void add_production(char * s)
 
 void init()
 {
-	term_size = INIT_QTY;
-	term_qty = 0;
-	terminals = malloc(term_size*sizeof(char));
-	nterm_size = INIT_QTY;
-	nterm_qty = 0;
-	non_terminals = malloc(nterm_size*sizeof(char));
-	productions = new_prod_list();
+	term_size 	= INIT_QTY;
+	term_qty 	= 0;
+	terminals 	= malloc(term_size*sizeof(char));
+	nterm_size 	= INIT_QTY;
+	nterm_qty 	= 0;
+	non_terminals 	= malloc(nterm_size*sizeof(char));
+	productions 	= new_prod_list();
+	valid_name 	= false;
+	valid_grammar 	= false;
+	valid_nt 	= false;
+	valid_t 	= false;
+	valid_d 	= false;
+	valid_p 	= false;
 }
 
 void printall()
@@ -280,6 +295,58 @@ void printall()
 		printf("%c -> %c%c, ", p->left, p->right[0], p->right[1]);
 	}
 	printf("}>\n");
+}
+
+void process()
+{
+	if(!valid_name)
+	{
+		printf("Error: Not a valid grammar identifier\n");
+		exit(1);
+	}
+	if(!valid_nt)
+	{
+		printf("Error: Invalid syntax. Non-terminal symbols not found\n");
+		exit(1);
+	}
+	if(!valid_t)
+	{
+		printf("Error: Invalid syntax. Terminals symbols not found\n");
+		exit(1);
+	}	
+	if(!valid_d)
+	{
+		printf("Error: Invalid syntax. Distinguished element not found\n");
+		exit(1);
+	}
+	if(!valid_p)
+	{
+		printf("Error: Invalid syntax. Productions not found\n");
+		exit(1);
+	}
+	if(!valid_grammar)
+	{
+		printf("Error: Malformed grammar\n");
+		exit(1);
+	}
+	
+	GrammarADT gr = newGrammar();
+	
+	setTerminals(gr, terminals, term_qty);
+	setNonTerminals(gr, non_terminals, nterm_qty);
+	setDistinguished(gr, distinguished);
+	
+	ProductionsADT ps = newProductions(0);
+	
+	prod p = NULL;
+	for(p = productions->head; p != NULL; p = p->next)
+	{
+		addProduction(ps, newProduction(p->left, p->right[0], p->right[1]));
+	}
+	
+	setProductions(gr, ps);
+	
+	printGrammar(gr);
 }
 
 %}
@@ -307,7 +374,7 @@ valid_right_side ({non_terminal}{terminal})|({terminal}{non_terminal})|{lamda}|{
 <INITIAL>{space}*{grammar_name}{space}*={space}*\(	{for(h=0; h<yyleng && isspace(yytext[h]); h++);
 							 for(k=yyleng; k>0 && isspace(yytext[k]); k--);
 								BEGIN(TO_VN);}
-<TO_VN>{space}*\{				;BEGIN(VN);
+<TO_VN>{space}*\{				valid_name = true;BEGIN(VN);
 <VN>{space}*{non_terminal}{space}*[,\}]			{
 								add_non_terminal(yytext);
 								if(yytext[yyleng-1]==',')
@@ -316,7 +383,7 @@ valid_right_side ({non_terminal}{terminal})|({terminal}{non_terminal})|{lamda}|{
 									BEGIN(TO_VT);
 								else
 									BEGIN(ERROR);}
-<TO_VT>{space}*,{space}*\{			;BEGIN(VT);
+<TO_VT>{space}*,{space}*\{			valid_nt = true;BEGIN(VT);
 <VT>{space}*{terminal}{space}*[,\}]			{
 								add_terminal(yytext);
 								if(yytext[yyleng-1]==',')
@@ -325,13 +392,13 @@ valid_right_side ({non_terminal}{terminal})|({terminal}{non_terminal})|{lamda}|{
 									BEGIN(TO_D);
 								else
 									BEGIN(ERROR);}
-<TO_D>{space}*,					; BEGIN(DISTINGUISHED);
+<TO_D>{space}*,					valid_t = true; BEGIN(DISTINGUISHED);
 <DISTINGUISHED>{space}*{non_terminal}		{for(h=0; h<yyleng && isspace(yytext[h]); h++);
 								distinguished = yytext[h];
 								yytext[0]=yytext[h];
 								yytext[1]='\0';
 								BEGIN(TO_PR);}
-<TO_PR>{space}*,{space}*\{			;BEGIN(PRODUCTION);
+<TO_PR>{space}*,{space}*\{			valid_d = true;BEGIN(PRODUCTION);
 <PRODUCTION>{space}*({valid_left_side}){space}*\-{space}*\>{space}*({valid_right_side}){space}*[,\|\}]	{
 													add_production(yytext);
 													if(yytext[yyleng-1]==',')
@@ -359,7 +426,7 @@ valid_right_side ({non_terminal}{terminal})|({terminal}{non_terminal})|{lamda}|{
 								else
 									BEGIN(ERROR);
 								}
-<TO_FIN>{space}*\)	;BEGIN(FIN);
+<TO_FIN>{space}*\)	valid_p = valid_grammar = true;BEGIN(FIN);
 <FIN>[.{space}]*	;
 <ERROR>.{space}*	;
 %%
@@ -368,7 +435,7 @@ int main()
 {
 	init();
 	yylex();
-	printall();
+	process();
 	return 0;
 }
 

@@ -583,6 +583,9 @@ char *yytext;
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "../include/Grammar.h"
+#include "../include/Automata.h"
+
 #define INIT_QTY 10
 #ifndef LAMDA
 #define LAMDA '\\'
@@ -591,6 +594,11 @@ typedef struct prod_t prod_t;
 typedef struct prod_list_t prod_list_t;
 typedef prod_t * prod;
 typedef prod_list_t * prod_list;
+
+enum{
+	false,
+	true
+} bool;
 
 struct prod_t{
 	prod prev;
@@ -616,6 +624,7 @@ int nterm_size;
 int nterm_qty;
 char distinguished;
 prod_list productions;
+int valid_name, valid_grammar, valid_nt, valid_t, valid_d, valid_p;
 
 int exists(char * s, char c, size_t l)
 {
@@ -728,7 +737,7 @@ void add_terminal(char * s)
 		if(term_size == term_qty)
 		{
 			char * aux;
-			aux = realloc(terminals, term_size *= 0.3);
+			aux = realloc(terminals, term_size *= 1.5);
 			if(aux == NULL)
 			{
 				printf("Error: Not enought memory!\n");
@@ -762,7 +771,7 @@ void add_non_terminal(char * s)
 		if(nterm_size == nterm_qty)
 		{
 			char * aux;
-			aux = realloc(non_terminals, term_size *= 0.3);
+			aux = realloc(non_terminals, term_size *= 1.5);
 			if(aux == NULL)
 			{
 				printf("Error: Not enought memory!\n");
@@ -829,13 +838,19 @@ void add_production(char * s)
 
 void init()
 {
-	term_size = INIT_QTY;
-	term_qty = 0;
-	terminals = malloc(term_size*sizeof(char));
-	nterm_size = INIT_QTY;
-	nterm_qty = 0;
-	non_terminals = malloc(nterm_size*sizeof(char));
-	productions = new_prod_list();
+	term_size 	= INIT_QTY;
+	term_qty 	= 0;
+	terminals 	= malloc(term_size*sizeof(char));
+	nterm_size 	= INIT_QTY;
+	nterm_qty 	= 0;
+	non_terminals 	= malloc(nterm_size*sizeof(char));
+	productions 	= new_prod_list();
+	valid_name 	= false;
+	valid_grammar 	= false;
+	valid_nt 	= false;
+	valid_t 	= false;
+	valid_d 	= false;
+	valid_p 	= false;
 }
 
 void printall()
@@ -862,11 +877,57 @@ void printall()
 	printf("}>\n");
 }
 
- 
- 
- 
- 
- 
+void process()
+{
+	if(!valid_name)
+	{
+		printf("Error: Not a valid grammar identifier\n");
+		exit(1);
+	}
+	if(!valid_nt)
+	{
+		printf("Error: Invalid syntax. Non-terminal symbols not found\n");
+		exit(1);
+	}
+	if(!valid_t)
+	{
+		printf("Error: Invalid syntax. Terminals symbols not found\n");
+		exit(1);
+	}	
+	if(!valid_d)
+	{
+		printf("Error: Invalid syntax. Distinguished element not found\n");
+		exit(1);
+	}
+	if(!valid_p)
+	{
+		printf("Error: Invalid syntax. Productions not found\n");
+		exit(1);
+	}
+	if(!valid_grammar)
+	{
+		printf("Error: Malformed grammar\n");
+		exit(1);
+	}
+	
+	GrammarADT gr = newGrammar();
+	
+	setTerminals(gr, terminals, term_qty);
+	setNonTerminals(gr, non_terminals, nterm_qty);
+	setDistinguished(gr, distinguished);
+	
+	ProductionsADT ps = newProductions(0);
+	
+	prod p = NULL;
+	for(p = productions->head; p != NULL; p = p->next)
+	{
+		addProduction(ps, newProduction(p->left, p->right[0], p->right[1]));
+	}
+	
+	setProductions(gr, ps);
+	
+	printGrammar(gr);
+}
 
  
  
@@ -874,7 +935,13 @@ void printall()
  
  
 
-#line 878 "lex.yy.c"
+ 
+ 
+ 
+ 
+ 
+
+#line 945 "lex.yy.c"
 
 #define INITIAL 0
 #define TO_VN 1
@@ -1073,9 +1140,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
     
-#line 306 "gr-parser.l"
+#line 373 "gr-parser.l"
 
-#line 1079 "lex.yy.c"
+#line 1146 "lex.yy.c"
 
 	if ( !(yy_init) )
 		{
@@ -1161,7 +1228,7 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 /* rule 1 can match eol */
 YY_RULE_SETUP
-#line 307 "gr-parser.l"
+#line 374 "gr-parser.l"
 {for(h=0; h<yyleng && isspace(yytext[h]); h++);
 							 for(k=yyleng; k>0 && isspace(yytext[k]); k--);
 								BEGIN(TO_VN);}
@@ -1169,13 +1236,13 @@ YY_RULE_SETUP
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 310 "gr-parser.l"
-;BEGIN(VN);
+#line 377 "gr-parser.l"
+valid_name = true;BEGIN(VN);
 	YY_BREAK
 case 3:
 /* rule 3 can match eol */
 YY_RULE_SETUP
-#line 311 "gr-parser.l"
+#line 378 "gr-parser.l"
 {
 								add_non_terminal(yytext);
 								if(yytext[yyleng-1]==',')
@@ -1188,13 +1255,13 @@ YY_RULE_SETUP
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 319 "gr-parser.l"
-;BEGIN(VT);
+#line 386 "gr-parser.l"
+valid_nt = true;BEGIN(VT);
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 320 "gr-parser.l"
+#line 387 "gr-parser.l"
 {
 								add_terminal(yytext);
 								if(yytext[yyleng-1]==',')
@@ -1207,13 +1274,13 @@ YY_RULE_SETUP
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
-#line 328 "gr-parser.l"
-; BEGIN(DISTINGUISHED);
+#line 395 "gr-parser.l"
+valid_t = true; BEGIN(DISTINGUISHED);
 	YY_BREAK
 case 7:
 /* rule 7 can match eol */
 YY_RULE_SETUP
-#line 329 "gr-parser.l"
+#line 396 "gr-parser.l"
 {for(h=0; h<yyleng && isspace(yytext[h]); h++);
 								distinguished = yytext[h];
 								yytext[0]=yytext[h];
@@ -1223,13 +1290,13 @@ YY_RULE_SETUP
 case 8:
 /* rule 8 can match eol */
 YY_RULE_SETUP
-#line 334 "gr-parser.l"
-;BEGIN(PRODUCTION);
+#line 401 "gr-parser.l"
+valid_d = true;BEGIN(PRODUCTION);
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 335 "gr-parser.l"
+#line 402 "gr-parser.l"
 {
 													add_production(yytext);
 													if(yytext[yyleng-1]==',')
@@ -1248,7 +1315,7 @@ YY_RULE_SETUP
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 349 "gr-parser.l"
+#line 416 "gr-parser.l"
 {
 								add_production2(previous, yytext);
 								if(yytext[yyleng-1]==',')
@@ -1266,26 +1333,26 @@ YY_RULE_SETUP
 case 11:
 /* rule 11 can match eol */
 YY_RULE_SETUP
-#line 362 "gr-parser.l"
-;BEGIN(FIN);
+#line 429 "gr-parser.l"
+valid_p = valid_grammar = true;BEGIN(FIN);
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 363 "gr-parser.l"
+#line 430 "gr-parser.l"
 ;
 	YY_BREAK
 case 13:
 /* rule 13 can match eol */
 YY_RULE_SETUP
-#line 364 "gr-parser.l"
+#line 431 "gr-parser.l"
 ;
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 365 "gr-parser.l"
+#line 432 "gr-parser.l"
 ECHO;
 	YY_BREAK
-#line 1289 "lex.yy.c"
+#line 1356 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(TO_VN):
 case YY_STATE_EOF(VN):
@@ -2295,7 +2362,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 365 "gr-parser.l"
+#line 432 "gr-parser.l"
 
 
 
@@ -2303,7 +2370,7 @@ int main()
 {
 	init();
 	yylex();
-	printall();
+	process();
 	return 0;
 }
 
