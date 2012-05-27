@@ -515,8 +515,9 @@ void actualizeProductions(GrammarADT grammar){
 	 */
 	int contained = FALSE;
 	for ( i=0; i<quantnonterminals; i++ ){
+		contained = FALSE;
 		for (j=0; j<quantproductions; j++ ){
-			ProductionADT p = getProduction(productions,i);
+			ProductionADT p = getProduction(productions,j);
 			char first = getProductionComponent(p,0);
 			if( nonterminals[i] == first ){
 				contained = TRUE;
@@ -528,7 +529,6 @@ void actualizeProductions(GrammarADT grammar){
 		 */
 		if (!contained){
 			removeProductionsContaining(productions, nonterminals[i]);
-			contained = FALSE;
 		}
 	}
 }
