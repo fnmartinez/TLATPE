@@ -1,6 +1,0 @@
-digraph{
-node[shape=circle] NodeA [label="A"];
-node[shape=circle] NodeB [label="B"];
-node[shape=circle] NodeC [label="C"];
-node[shape=circle] NodeD [label="D"];
-}
