@@ -1,4 +1,4 @@
-flex Automata.l
+flex lex/Automata.l
 gcc -g -Wall -o parser lex.yy.c -lfl ../classes/Automata.c ../classes/Derivation.c ../classes/Derivations.c ../classes/Grammar.c ../classes/Production.c ../classes/Productions.c ../classes/Utils.c
 echo af5.dot;
 cat files/af5.dot | ./parser
@@ -8,7 +8,6 @@ echo af3.dot;
 cat files/af3.dot | ./parser
 echo af2.dot;
 cat files/af2.dot | ./parser
-dot out.dot -Tjpg > g.jpg
-rm g.jpg
+rm h.jpg
 rm lex.yy.c
 rm parser
