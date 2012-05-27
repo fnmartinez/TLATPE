@@ -9,20 +9,36 @@ void formalize(GrammarADT grammar){
 	/*unitary productions must be removed*/
 	removeUnitaryProductions(grammar);
 
+	/*TODO: delete*/
+	printf("\nafter removeUnitaries\n");
+	printGrammar(grammar);
+
 	/*unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);
+
+	/*TODO: delete*/
+	printf("\nafter UnproductiveProductions\n");
+	printGrammar(grammar);
 
 	/*unreachable productions must be deleted*/
 	removeUnreachableProductions(grammar);
 
+	/*TODO: delete*/
+	printf("\nafter UnreachableProduction\n");
+	printGrammar(grammar);
+
 	/*all productions must be in the form A-Ba or A-> /*/
 	removeOnlyRightTerminals(grammar);
 
-	/*the grammar must be right*/
-	//convertToRight(grammar);
+	/*TODO: delete*/
+	printf("\nafter removeOnlyRightTerminals\n");
+	printGrammar(grammar);
 
-	/*AGAIN : unitary productions must be removed*/
-	removeUnitaryProductions(grammar);
+	/*the grammar must be right*/
+	convertToRight(grammar);
+	/*TODO: delete*/
+	printf("\nafter convertToRight\n");
+	printGrammar(grammar);
 
 	/*AGAIN : unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);

@@ -84,7 +84,7 @@ int containsPair(char * unitaries, int size, char first, char sec){
 
 
 void printByPairs(char * unitaries,int size){
-	printf("\nunitaries: ");
+	printf("unitaries: ");
 	int i;
 	for(i =0; i< size; i+=2){
 		printf("(%c,%c)", unitaries[i],unitaries[i+1]);

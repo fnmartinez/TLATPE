@@ -70,7 +70,8 @@ void removeProduction(ProductionsADT productions, char leftsymbol){
 	for(i=0; i<n; i++){
 		if ( getProductionComponent(getProduction(productions,i),0) == leftsymbol){
 			if (n-1 != i ){ /*is not the last production*/
-				while ( getProductionComponent(getProduction(productions,n-1),0) == leftsymbol ){
+				while ( getProductionComponent(getProduction(productions,n-1),0) == leftsymbol &&
+						n-1 != i){
 					n--;
 				}
 				ProductionADT aux = getProduction(productions,n-1);
