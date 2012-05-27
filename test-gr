@@ -1,0 +1,18 @@
+echo gr1
+cat parser/files/gr1.gr | ./grammar > results1.txt
+echo gr2
+cat parser/files/gr2.gr | ./grammar > results2.txt
+echo gr3
+cat parser/files/gr3.gr | ./grammar > results3.txt
+echo gr4
+cat parser/files/gr4.gr | ./grammar > results4.txt
+echo gr5
+cat parser/files/gr5.gr | ./grammar > results5.txt
+echo gr6
+cat parser/files/gr6.gr | ./grammar > results6.txt
+echo gr7
+cat parser/files/gr7.gr | ./grammar > results7.txt
+echo gr8
+cat parser/files/gr8.gr | ./grammar > results8.txt
+echo gr9
+cat parser/files/gr9.gr | ./grammar > results9.txt
