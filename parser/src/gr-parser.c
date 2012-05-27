@@ -271,27 +271,27 @@ int is_unitary(prod p){
 
 void process() {
 	if (!valid_name) {
-		printf("Error: Not a valid grammar identifier\n");
+		printf("Syntax Error: Not a valid grammar identifier\n");
 		exit(1);
 	}
 	if (!valid_nt) {
-		printf("Error: Invalid syntax. Non-terminal symbols not found\n");
+		printf("Syntax Error: Valid non-terminal symbols not found\n");
 		exit(1);
 	}
 	if (!valid_t) {
-		printf("Error: Invalid syntax. Terminals symbols not found\n");
+		printf("Syntax Error: Valid terminals symbols not found\n");
 		exit(1);
 	}
 	if (!valid_d) {
-		printf("Error: Invalid syntax. Distinguished element not found\n");
+		printf("Syntax Error: Valid distinguished element not found\n");
 		exit(1);
 	}
 	if (!valid_p) {
-		printf("Error: Invalid syntax. Productions not found\n");
+		printf("Syntax Error: Valid productions not found\n");
 		exit(1);
 	}
 	if (!valid_grammar) {
-		printf("Error: Malformed grammar\n");
+		printf("Syntax Error: Malformed grammar\n");
 		exit(1);
 	}
 

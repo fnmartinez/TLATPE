@@ -18,14 +18,13 @@ grammar.yy.c:
 	$(FLEX) -o grammar.yy.c $(GR_FL_FILES) 
 	
 AT_FL_FILES = ./parser/lex/Automata.l
-AT_CC_FILES = ./parser/src/Automata.c ./automata.yy.c
+AT_CC_FILES = ./automata.yy.c
 automata: $(FILES) $(AT_CC_FILES)
-	$(FLEX) $(AT_FL_FILES)
 	$(CC) $(COPTS) -o $(AT_OUT_EXE) $(FILES) $(AT_CC_FILES) $(LDOPTS)
 	-rm -f automata.yy.c
 	
 automata.yy.c:
-	$(FLEX) -o automata.yy.c $(GR_FL_FILES)
+	$(FLEX) -o automata.yy.c $(AT_FL_FILES)
 	
 all: grammar automata
 	
