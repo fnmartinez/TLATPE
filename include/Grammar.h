@@ -67,6 +67,7 @@ int isTerminal(char symbol);
 int isNonTerminal(char symbol);
 void actualizeTerminals(GrammarADT grammar);
 void actualizeNonTerminals(GrammarADT grammar);
+int isRight(GrammarADT grammar);
 
 
 #endif /* STRUCTURES_H_ */

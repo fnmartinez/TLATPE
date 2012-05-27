@@ -23,6 +23,7 @@ void removeOnlyRightTerminalsTest();
 void removeUnitaryProductionsTest();
 void removeParticularProductionTest();
 void convertToRightTest();
+void grammar1Test();
 
 
 
@@ -44,16 +45,17 @@ int main(void)
 	init();
 	//basicTest();
 	//addProductionsTest();
-	grammarToAutomata();
+	//grammarToAutomata();
 	//removeProductionsTest();
 	//removeUnreachableProductionsTest();
 	//removeOnlyRightTerminalsTest();
 	//removeParticularProductionTest();
-	//removeUnitaryProductionsTest();
+	removeUnitaryProductionsTest();
 	//convertToRightTest();
+	//grammar1Test();
 
 
-	destroy();
+	//destroy();
 	return 0;
 }
 
@@ -79,7 +81,7 @@ void init(){
 	/*B-> aB*/
 	p7 = newProduction('B','B','b');
 	/*A-> bA*/
-	p3 = newProduction('A','A','b');
+	p3 = newProduction('A','B','/');
 	/*A-> aB*/
 	p8 = newProduction('A','B','a');
 	/*B-> ab*/
@@ -162,6 +164,7 @@ void removeUnreachableProductionsTest(){
 
 void removeUnitaryProductionsTest(){
 	printf("\nTesting Remove Unitary Productions Method \n");
+	printGrammar(g1);
 	removeUnitaryProductions(g1);
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
@@ -169,10 +172,12 @@ void removeUnitaryProductionsTest(){
 
 void removeOnlyRightTerminalsTest(){
 	printf("\nTesting Remove Only Right Terminals Method \n");
+	printGrammar(g1);
 	removeOnlyRightTerminals(g1);
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
+
 void removeParticularProductionTest(){
 	printf("\nTesting Remove Particular Productions Method \n");
 	removeParticularProduction(getProductions(g1), newProduction('A',LAMDA,'b'));
@@ -189,3 +194,55 @@ void convertToRightTest(){
 	printGrammar(g1);
 	printf("productions quant: %d\n", getQuant(getProductions(g1)));
 }
+
+
+void grammar1Test(){
+	//G1 = ({A, B, C}, {a, b, c},A, {A -> aB|c, B -> aA|b})
+
+		/*Initialization*/
+		GrammarADT grammar1 = newGrammar();
+		grammar1 = newGrammar();
+		setDistinguished(grammar1, 'A');
+		char * nonterminals1 = malloc(sizeof(char)*3);
+		nonterminals1[0] = 'A';
+		nonterminals1[1] = 'B';
+		nonterminals1[2] = 'C';
+		setNonTerminals(grammar1,nonterminals1,3);
+		char * term1 = malloc(sizeof(char)*3);
+		term1[0] = 'a';
+		term1[1] = 'b';
+		term1[2] = 'c';
+		setTerminals(grammar1,term1,3);
+
+		ProductionADT prod1 = newProduction('A','a','B');
+		ProductionADT prod2 = newProduction('A','c',LAMDA);
+		ProductionADT prod3 = newProduction('B','a','A');
+		ProductionADT prod4 = newProduction('B',LAMDA,'b');
+		//ProductionsADT productions1 = newProductions(0);
+
+		ProductionsADT productions1 = newProductions(4);
+		setProduction(productions1,0,prod1);
+		setProduction(productions1,1,prod2);
+		setProduction(productions1,2,prod3);
+		setProduction(productions1,3,prod4);
+
+
+		/*addProduction(productions1,prod1);
+		addProduction(productions1,prod2);
+		addProduction(productions1,prod3);
+		addProduction(productions1,prod4);*/
+
+		setProductions(grammar1,productions1);
+
+
+		printf("Before Nomalization\n");
+		printGrammar(grammar1);
+		/*Conversion*/
+		AutomataADT automata1 = toAutomata(grammar1);
+		printf("After Nomalization\n");
+		printGrammar(grammar1);
+		printAutomata(automata1);
+
+
+}
+

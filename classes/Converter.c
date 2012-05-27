@@ -16,10 +16,13 @@ void formalize(GrammarADT grammar){
 	removeUnreachableProductions(grammar);
 
 	/*all productions must be in the form A-Ba or A-> /*/
-	//removeOnlyRightTerminals(grammar);
+	removeOnlyRightTerminals(grammar);
 
 	/*the grammar must be right*/
 	//convertToRight(grammar);
+
+	/*AGAIN : unitary productions must be removed*/
+	removeUnitaryProductions(grammar);
 
 	/*AGAIN : unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);

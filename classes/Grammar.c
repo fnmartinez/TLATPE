@@ -73,7 +73,7 @@ void printGrammar(GrammarADT grammar){
 	}
 	printf("}\n");
 	printProductions(getProductions(grammar));
-	printf("\nProduction Quant %d\n",getQuant(getProductions(grammar)));
+	printf("Production Quant %d\n",getQuant(getProductions(grammar)));
 	return;
 }
 
@@ -252,62 +252,79 @@ void removeOnlyRightTerminals(GrammarADT grammar){
 	int l = strlen(abc);
 	int i, j;
 	int found = FALSE;
+	char newsymbol;
 
-	for(j=0; j< getQuant(getProductions(grammar)); j++)
-	{
-		if((isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 1)) &&
-				getProductionComponent(getProduction(getProductions(grammar),j), 2) == LAMDA) ||
-				(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 2)) &&
-						getProductionComponent(getProduction(getProductions(grammar),j), 1) == LAMDA ))
-		{
+	ProductionsADT productions = getProductions(grammar);
+
+	/*search for A->a like productions*/
+	for(j=0; j< getQuant(getProductions(grammar)); j++){
+		ProductionADT p = getProduction(productions,j);
+		char sec =  getProductionComponent(p,1);
+		char third =  getProductionComponent(p,2);
+		if(	( isTerminal(sec) && third == LAMDA ) ||
+			( isTerminal(third) && sec == LAMDA ) ) {
 			found = TRUE;
 			break;
 		}
 	}
-
+	/*if there are not productions with only terminals in the right side
+	 * ,go away*/
 	if(!found){
 		return;
 	}
+	/*search for the new symbol to insert*/
+	int nontermquant = getQuantNonTerminals(grammar);
+	char * nonterm  = getNonTerminals(grammar);
 	for(i = 0; i<l; i++){
-		for(j = 0; j< getQuantNonTerminals(grammar) &&
-				getNonTerminals(grammar)[j] != abc[i]; j++);
-		if(j==getQuantNonTerminals(grammar))
-		{
+		for(j = 0; j< nontermquant && nonterm[j] != abc[i]; j++);
+		if(j==nontermquant){
+			newsymbol = abc[i];
 			break;
 		}
 	}
-
-	char * nterm = getNonTerminals(grammar);
-	int ntermQty = getQuantNonTerminals(grammar);
-
-	char * aux = realloc(nterm, (ntermQty+1)*sizeof(char));
-	if(aux == NULL)
-	{
+	/*add new symbol to the nonterminals array*/
+	char * term = getNonTerminals(grammar);
+	int termquant = getQuantNonTerminals(grammar);
+	char * aux = realloc(term, (termquant+1)*sizeof(char));
+	if(aux == NULL){
 		printf("Error: Not enought memory\n");
 		exit(1);
 	}
-	nterm[ntermQty] = abc[i];
-	ntermQty++;
-	setNonTerminals(grammar, nterm, ntermQty);
+	term = aux;
+	term[termquant] = newsymbol;
+	termquant++;
+	setNonTerminals(grammar, term, termquant);
 
-	for(j=0; j< getQuant(getProductions(grammar)); j++)
-	{
-		if(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 1)) &&
-				getProductionComponent(getProduction(getProductions(grammar),j), 2) == LAMDA )
-		{
-			printProduction(getProduction(getProductions(grammar),j));
-			setProductionComponent(getProduction(getProductions(grammar),j), 2, getProductionComponent(getProduction(getProductions(grammar),j), 1));
-			setProductionComponent(getProduction(getProductions(grammar),j), 1, abc[i]);
-		}
-		if(isTerminal(getProductionComponent(getProduction(getProductions(grammar),j), 2)) &&
-				getProductionComponent(getProduction(getProductions(grammar),j), 1) == LAMDA )
-		{
-			printProduction(getProduction(getProductions(grammar),j));
-			setProductionComponent(getProduction(getProductions(grammar),j), 1, abc[i]);
+	int isright = isRight(grammar) ;
+	int productionquant = getQuant(getProductions(grammar));
+	/*create the new productions with the new symbol*/
+	for(j=0; j< productionquant ; j++){
+		ProductionADT p = getProduction(getProductions(grammar),j);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		/*is the production have only one terminal symbol on the right side */
+		if ( isTerminal(sec) && third == LAMDA ){
+			/*if the grammar is right sided the new symbol should be
+			* added to the right*/
+			if( isright ){
+				setProductionComponent(p, 1, sec );
+				setProductionComponent(p, 2, newsymbol);
+			}else{
+				setProductionComponent(p, 2, sec );
+				setProductionComponent(p, 1, newsymbol);
+			}
+		}else if( isTerminal(third) && sec == LAMDA){
+			if( isright ){
+				setProductionComponent(p, 1, third );
+				setProductionComponent(p, 2, newsymbol);
+			}else{
+				setProductionComponent(p, 1, newsymbol);
+				setProductionComponent(p, 2, third );
+			}
 		}
 	}
 
-	addProduction(getProductions(grammar), newProduction(abc[i],LAMDA,LAMDA));
+	addProduction(getProductions(grammar), newProduction(newsymbol,LAMDA,LAMDA));
 
 	/*remove non terminals and terminals that are no longer there */
 	actualizeTerminals(grammar);
@@ -321,27 +338,38 @@ void convertToRight(GrammarADT grammar){
 	char nd = 0;
 	int ml = FALSE;
 
-	for(i=0; i < getQuant(getProductions(grammar)); i++){
-		if(getProductionComponent(getProduction(getProductions(grammar), i), 1) == LAMDA &&
-				getProductionComponent(getProduction(getProductions(grammar), i), 2) == LAMDA){
-			if(nd != 0)
-			{
+	/*if the grammar is already right there is no
+	 * reason to convert it*/
+	if ( isRight(grammar) ){
+		return;
+	}
+
+	ProductionsADT productions = getProductions(grammar);
+	int quantproductions = getQuant(productions);
+	for(i=0; i < quantproductions; i++){
+		ProductionADT p1 = getProduction(productions, i);
+		char first = getProductionComponent(p1, 0);
+		char sec = getProductionComponent(p1, 1);
+		char third = getProductionComponent(p1, 2);
+		if(sec == LAMDA && third == LAMDA){
+			if(nd != 0){
 				ml = TRUE; //More than one lamda production exist.
 				break;
 			}
-			nd = getProductionComponent(getProduction(getProductions(grammar), i), 0);
+			nd = first;
 		}
 	}
 
 	ProductionsADT ps = newProductions(0);
-	for(i = 0; i < getQuant(getProductions(grammar)); i++){
-		if(isNonTerminal(getProductionComponent(getProduction(getProductions(grammar), i), 1))){
-			addProduction(ps, newProduction(getProductionComponent(getProduction(getProductions(grammar), i), 1),
-					getProductionComponent(getProduction(getProductions(grammar), i), 2),
-					getProductionComponent(getProduction(getProductions(grammar), i), 0)));
+	for(i = 0; i < quantproductions ; i++){
+		ProductionADT p1 = getProduction(productions, i);
+		char first = getProductionComponent(p1, 0);
+		char sec = getProductionComponent(p1, 1);
+		char third = getProductionComponent(p1, 2);
+		if(isNonTerminal(sec)){
+			addProduction(ps, newProduction(sec , third, first));
 		}
 	}
-
 	setProductions(grammar, ps);
 	if(!ml){
 		addProduction(ps, newProduction(getDistinguished(grammar), LAMDA, LAMDA));
@@ -443,5 +471,21 @@ void actualizeNonTerminals(GrammarADT grammar){
 		setNonTerminals(grammar,nontermsfounded,nontermsfoundedsize);
 	}
 
+}
+
+int isRight(GrammarADT grammar){
+	ProductionsADT productions = getProductions(grammar);
+	int n = getQuant(productions);
+	int i;
+	for (i=0; i<n; i++){
+		ProductionADT p = getProduction(productions,i);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		/*if there is a production like A->Ba, it is a left sided grammar*/
+		if (isNonTerminal(sec) && isTerminal(third)){
+			return 0;
+		}
+	}
+	return 1;
 }
 

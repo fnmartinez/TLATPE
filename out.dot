@@ -1,0 +1,14 @@
+digraph{
+node[shape=circle] NodeA [label="A"];
+node[shape=circle] NodeB [label="B"];
+node[shape=circle] NodeC [label="C"];
+node[shape=circle] NodeD [label="D"];
+NodeA->NodeB [label="a"];
+NodeA->NodeE [label="c"];
+NodeB->Node\ [label="C"];
+NodeB->NodeE [label="b"];
+NodeC->Node\ [label="D"];
+NodeC->NodeD [label="c"];
+NodeC->NodeE [label="b"];
+NodeD->NodeE [label="b"];
+}
