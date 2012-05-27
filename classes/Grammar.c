@@ -158,28 +158,32 @@ void removeUnitaryProductions(GrammarADT grammar){
 
 void removeUnproductiveProductions(GrammarADT grammar){
 	ProductionsADT  productions = getProductions(grammar);
-	int i, quantproductions = getQuant(productions), productivequant=0,lastproductivequant=0;
+	int i, quantproductions = getQuant(productions), productivequant=0,lastproductivequant=-1;
 	char * productives = NULL;
 	char * aux1 = NULL;
 	while(productivequant != lastproductivequant){
 		lastproductivequant = productivequant;
 		for( i=0; i< quantproductions;i++ ){
 			ProductionADT p1 = getProduction(productions,i);
-			int first1 = getProductionComponent(p1,0);
-			int sec1 = getProductionComponent(p1,1);
-			int third1 = getProductionComponent(p1,2);
-
-			if ( ( sec1 == LAMDA && third1 == LAMDA ) || /*lamda*/
-				 (isTerminal(sec1) && isTerminal(third1) ) || /*both terminal*/
-				 (   isTerminal(sec1) && third1 == LAMDA   ) || /*one terminal*/
-				 (   isTerminal(third1) && sec1 == LAMDA   ) ||
-				 /*one terminal and one productive*/
-				 (isTerminal(sec1) && ( isNonTerminal(third1) && containsChar(productives,productivequant,third1) ) ) ||
-				 (isTerminal(third1) && ( isNonTerminal(sec1) && containsChar(productives,productivequant,sec1) ) ) ){
-				 if ( ( aux1 = realloc(productives, sizeof(char)*(productivequant+1)) ) == NULL ){
-						fprintf(stderr, "Error doing realloc \n");
-				 }
-				 productives[productivequant++] = first1;
+			char first1 = getProductionComponent(p1,0);
+			char sec1 = getProductionComponent(p1,1);
+			char third1 = getProductionComponent(p1,2);
+			if ( !containsChar(productives,productivequant,first1)  ){
+				if ( ( sec1 == LAMDA && third1 == LAMDA ) || /*lamda*/
+					 (isTerminal(sec1) && isTerminal(third1) ) || /*both terminal*/
+					 (   isTerminal(sec1) && third1 == LAMDA   ) || /*one terminal*/
+					 (   isTerminal(third1) && sec1 == LAMDA   ) ||
+					 /*one terminal and one productive*/
+					 (isTerminal(sec1) && ( isNonTerminal(third1) && containsChar(productives,productivequant,third1) ) ) ||
+					 (isTerminal(third1) && ( isNonTerminal(sec1) && containsChar(productives,productivequant,sec1) ) ) ||
+					 ( sec1 == LAMDA && ( isNonTerminal(third1) && containsChar(productives,productivequant,third1) ) ) ||
+					 ( third1 == LAMDA && ( isNonTerminal(sec1) && containsChar(productives,productivequant,sec1) ) )){
+					 if ( ( aux1 = realloc(productives, sizeof(char)*(productivequant+1)) ) == NULL ){
+							fprintf(stderr, "Error doing realloc \n");
+					 }
+					 productives = aux1;
+					 productives[productivequant++] = first1;
+				}
 			}
 		}
 	}
@@ -513,7 +517,7 @@ void actualizeProductions(GrammarADT grammar){
 	for ( i=0; i<quantnonterminals; i++ ){
 		for (j=0; j<quantproductions; j++ ){
 			ProductionADT p = getProduction(productions,i);
-			int first = getProductionComponent(p,0);
+			char first = getProductionComponent(p,0);
 			if( nonterminals[i] == first ){
 				contained = TRUE;
 				break;
@@ -524,6 +528,7 @@ void actualizeProductions(GrammarADT grammar){
 		 */
 		if (!contained){
 			removeProductionsContaining(productions, nonterminals[i]);
+			contained = FALSE;
 		}
 	}
 }

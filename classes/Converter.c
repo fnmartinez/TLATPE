@@ -9,8 +9,11 @@ void formalize(GrammarADT grammar){
 	/*unitary productions must be removed*/
 	removeUnitaryProductions(grammar);
 
+
+	printf("\n AFTER removeUnproductive\n");
 	/*unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);
+	printGrammar(grammar);
 
 	/*unreachable productions must be deleted*/
 	removeUnreachableProductions(grammar);
