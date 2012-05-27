@@ -103,6 +103,24 @@ void removeParticularProduction(ProductionsADT productions, ProductionADT p){
 	}
 }
 
+void removeProductionsContaining(ProductionsADT productions, char nonterm){
+	if( isTerminal(nonterm)){
+		return;
+	}
+	int quantproductions = getQuant(productions);
+	int i;
+	for(i=0;i< quantproductions; i++){
+		ProductionADT p = getProduction(productions,i);
+		char first = getProductionComponent(p,0);
+		char sec = getProductionComponent(p,1);
+		char third = getProductionComponent(p,2);
+		if ( first == nonterm || sec == nonterm  || third == nonterm ){
+			removeParticularProduction(productions,p);
+		}
+	}
+
+}
+
 int inCurrentProductions(ProductionsADT productions, char c){
 	int quantproductions = getQuant(productions),i;
 	for (i=0; i<quantproductions; i++){

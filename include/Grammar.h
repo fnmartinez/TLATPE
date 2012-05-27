@@ -67,6 +67,7 @@ int isTerminal(char symbol);
 int isNonTerminal(char symbol);
 void actualizeTerminals(GrammarADT grammar);
 void actualizeNonTerminals(GrammarADT grammar);
+void actualizeProductions(GrammarADT grammar);
 int isRight(GrammarADT grammar);
 char getNewSymbol(GrammarADT grammar);
 
