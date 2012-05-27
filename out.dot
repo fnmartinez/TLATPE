@@ -1,8 +1,0 @@
-digraph{
-node[shape=doublecircle] NodeS [label="S"];
-node[shape=doublecircle] NodeB [label="B"];
-node[shape=circle] NodeC [label="C"];
-NodeS->NodeA [label="a"];
-NodeB->NodeC [label="c"];
-NodeS->NodeC [label="c"];
-}

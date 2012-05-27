@@ -50,7 +50,7 @@ valid_right_side ({non_terminal}{terminal})|({terminal}{non_terminal})|{lamda}|{
 									BEGIN(ERROR);}
 <TO_D>{space}*,					validate_terminals(); BEGIN(DISTINGUISHED);
 <DISTINGUISHED>{space}*{non_terminal}		{for(h=0; h<yyleng && isspace(yytext[h]); h++);
-								distinguished = yytext[h];
+								set_distinguished(yytext[h]);
 								yytext[0]=yytext[h];
 								yytext[1]='\0';
 								BEGIN(TO_PR);}
