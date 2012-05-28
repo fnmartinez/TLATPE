@@ -6,7 +6,8 @@ Regular Grammars - DFA converter.
 
 for compiling (in "root" folder)
 	(for grammar to automata parser)	$ make grammar 
-	(for automata to gramamr parser)    $ make automata
+	(for automata to gramamr parser)    	$ make automata
+	(for both converters)			$make all
 
 
 for start parsing
