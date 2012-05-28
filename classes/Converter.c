@@ -6,11 +6,11 @@
 
 
 void formalize(GrammarADT grammar){
+
 	/*unitary productions must be removed*/
 	removeUnitaryProductions(grammar);
 	printf("\n AFTER UNITARY1 ----------------------- ");
 	printGrammar(grammar);
-
 
 	/*unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);
