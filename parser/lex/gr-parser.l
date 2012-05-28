@@ -1,5 +1,4 @@
 %{
-
 #include "parser/src/gr-parser.h"
 char previous;
 int h, k;
@@ -19,10 +18,10 @@ extern char distinguished;
 %x FIN 
 %x ERROR
 space [ \t\n(\r\n)]
-non_terminal [A-Z]
-terminal [a-z]
+non_terminal [A-Z]{1}
+terminal [a-z]{1}
 number [0-9]
-grammar_name [a-zA-Z][a-zA-z0-9]
+grammar_name [a-zA-Z][a-zA-z0-9]*
 lamda \\
 valid_left_side {non_terminal}
 valid_right_side ({non_terminal}{terminal})|({terminal}{non_terminal})|{lamda}|{terminal}|{non_terminal}

@@ -436,7 +436,7 @@ void toFile(GrammarADT grammar){
 		fprintf(fp, "%c -> %c%c%s", getProductionComponent(getProduction(getProductions(grammar), i), 0),
 				getProductionComponent(getProduction(getProductions(grammar), i), 1),
 				getProductionComponent(getProduction(getProductions(grammar), i), 2),
-				(i == getQuant(getProductions(grammar))? "}": ", "));
+				(i == getQuant(getProductions(grammar))-1? "}": ", "));
 	}
 
 	fprintf(fp, ")");

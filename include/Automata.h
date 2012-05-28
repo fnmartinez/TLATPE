@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "Derivation.h"
 #include "Derivations.h"
 #include "utils.h"
@@ -60,5 +61,6 @@ int lenght(char * array);
 
 /*Conversion*/
 void toDot(AutomataADT automata);
+void drawDot(char* dotLocation, char* source, char* dest);
 
 #endif /* AUTOMATA_H_ */
