@@ -37,6 +37,7 @@ void removeProduction(ProductionsADT productions, char rightsymbol);
 int in(ProductionsADT productions, ProductionADT new);
 void addProduction(ProductionsADT productions, ProductionADT new);
 void removeParticularProduction(ProductionsADT productions, ProductionADT p);
+void removeProductionsContaining(ProductionsADT productions, char nonterm);
 int inCurrentProductions(ProductionsADT productions, char c);
 
 

@@ -1,5 +1,4 @@
 %{
-
 #include "parser/src/gr-parser.h"
 char previous;
 int h, k;

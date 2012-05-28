@@ -320,10 +320,11 @@ void process() {
 	printf("Grammar after Conversion\n");
 	printGrammar(gr);
 
-	printf("Resultung Automata\n");
-	printAutomata(at);
+	/*printf("Resultung Automata\n");
+	printAutomata(at);*/
 
 	toDot(at);
+	drawDot(".","out.dot","h.png");
 }
 
 void finale(void){
