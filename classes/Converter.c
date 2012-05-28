@@ -52,6 +52,9 @@ void formalize(GrammarADT grammar){
 AutomataADT toAutomata(GrammarADT grammar){
 	AutomataADT a = newAutomata();
 
+	/*formalization*/
+	formalize(grammar);
+
 	/*the automata´s symbols are equal to the grammar´s terminal symbols*/
 	setSymbols(a, getTerminals(grammar), getQuantTerminals(grammar));
 
@@ -61,8 +64,6 @@ AutomataADT toAutomata(GrammarADT grammar){
 	/*the automata´s inital state is equal to the grammar distinguished symbol*/
 	setInitialstate(a, getDistinguished(grammar));
 
-	/*formalization*/
-	formalize(grammar);
 
 	/*to automata conversion*/
 	ProductionsADT productions = getProductions(grammar);
