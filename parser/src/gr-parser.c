@@ -324,7 +324,7 @@ void process() {
 	printAutomata(at);
 
 	toDot(at);
-	drawDot(".","out.dot","h.png");
+	system("dot -Tpng out.dot > out.png");
 }
 
 void finale(void){

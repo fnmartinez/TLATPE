@@ -181,18 +181,7 @@ void toDot(AutomataADT automata){
 }
 
 void drawDot(char* dotLocation, char* source, char* dest){
-	int pid ;
-	char *args[4] ;
-	pid =  fork() ;
-	if (pid ==0){
-		freopen (dest,"w",stdout);
-		args[0] = "dot" ;
-		args[1] = source ;
-		args[2] = "-Tpng" ;
-		args[3] = NULL ;
-		execv(dotLocation, args) ;
-		printf("OPPSSSS\n") ; /*Should never get here*/
-	}
+
 }
 
 
