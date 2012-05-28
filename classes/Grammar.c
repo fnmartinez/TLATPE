@@ -237,8 +237,8 @@ void removeUnreachableProductions(GrammarADT grammar){
 		}
 	}
 	/*TODO: delete debug printf*/
-	//printf("\nReachables!!: ");
-	//printArray(reachables,reachablesquant);
+	printf("\nReachables!!: ");
+	printArray(reachables,reachablesquant);
 	int symsToRemovequant=0;
 	/*remove the unreachable productions*/
 	/*If the quantity of reachables is equal to the quantity of nonterminals,
@@ -247,8 +247,8 @@ void removeUnreachableProductions(GrammarADT grammar){
 		char * symsToRemove = NULL;
 		symsToRemovequant = getDifferents(getNonTerminals(grammar),
 				getQuantNonTerminals(grammar) ,reachables, reachablesquant, &symsToRemove);
-		//printf("\nTO REMOVE:");
-		//printArray(symsToRemove,symsToRemovequant );
+		printf("\nTO REMOVE:");
+		printArray(symsToRemove,symsToRemovequant );
 		for(i=0; i<symsToRemovequant; i++){
 			removeProduction(productions,symsToRemove[i]);
 		}
@@ -340,9 +340,8 @@ void removeOnlyRightTerminals(GrammarADT grammar){
 void convertToRight(GrammarADT grammar){
 
 	int i;
-	char nd = 0;
 	int ml = FALSE;
-
+	char oldistiguished = getDistinguished(grammar);
 	/*if the grammar is already right there is no
 	 * reason to convert it*/
 	if ( isRight(grammar) ){
@@ -363,10 +362,6 @@ void convertToRight(GrammarADT grammar){
 		}
 	}
 	setProductions(grammar, productions);
-	if(!ml){
-		addProduction(productions, newProduction(getDistinguished(grammar), LAMDA, LAMDA));
-		setDistinguished(grammar, nd);
-	}
 
 	/*a new nonTerminal should be created ,
 	 * that joint the non terminals that were joined to lambda*/
@@ -399,6 +394,9 @@ void convertToRight(GrammarADT grammar){
 		if( sec == LAMDA && third == LAMDA ){
 			removeParticularProduction(productions,p);
 		}
+	}
+	if(!ml){
+		addProduction(productions, newProduction(oldistiguished, LAMDA, LAMDA));
 	}
 
 	setProductions(grammar,productions);

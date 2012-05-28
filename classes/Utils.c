@@ -7,16 +7,17 @@
 
 # include "../include/utils.h"
 
-
+/*
+ * given two vectors, returns the elements that are in first and
+ * not in sec
+ * */
 int getDifferents( char * first, int firstquant, char * sec, int secquant, char ** notinfirst){
 	int i,n=0;
 	char * aux = NULL;
 	char * aux2 = NULL;
 	for(i=0; i<firstquant; i++){
-		if (i < secquant){
-			if ( containsChar(first,firstquant,sec[i]) ){
-				continue;
-			}
+		if ( containsChar(sec, secquant,first[i])){
+			continue;
 		}
 		if ( ( aux = realloc(aux2,sizeof(char)*(n+1)) ) == NULL ){
 				fprintf(stderr, "Error doing realloc \n");

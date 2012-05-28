@@ -8,30 +8,44 @@
 void formalize(GrammarADT grammar){
 	/*unitary productions must be removed*/
 	removeUnitaryProductions(grammar);
+	printf("\n AFTER UNITARY1 ----------------------- ");
+	printGrammar(grammar);
 
 
 	/*unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);
+	printf("\n AFTER UNPRODUCTIVE1 ----------------------- ");
+	printGrammar(grammar);
 
 	/*unreachable productions must be deleted*/
 	removeUnreachableProductions(grammar);
+	printf("\n AFTER UNREACHABLE1 ----------------------- ");
+	printGrammar(grammar);
 
 	/*all productions must be in the form A-Ba or A-> /*/
 	removeOnlyRightTerminals(grammar);
+	printf("\n AFTER OnlyRightTerminals ----------------------- ");
+	printGrammar(grammar);
 
-	//printf("\n AFTER convertToRight\n");
 	/*the grammar must be right*/
 	convertToRight(grammar);
-	//printGrammar(grammar);
+	printf("\n AFTER convertToRight ----------------------- ");
+	printGrammar(grammar);
 
 	/*AGAIN ; unitary productions must be removed*/
 	removeUnitaryProductions(grammar);
+	printf("\n AFTER UNITARY2 ----------------------- ");
+	printGrammar(grammar);
 
 	/*AGAIN : unproductive productiones must be removed*/
 	removeUnproductiveProductions(grammar);
+	printf("\n AFTER UNPRODUCTIVE2 ----------------------- ");
+	printGrammar(grammar);
 
 	/*AGAIN : unreachable productions must be deleted*/
 	removeUnreachableProductions(grammar);
+	printf("\n AFTER UNREACHABLE2 ----------------------- ");
+	printGrammar(grammar);
 
 }
 
