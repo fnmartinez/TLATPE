@@ -1,8 +1,18 @@
 digraph{
-node[shape=doublecircle] NodeS [label="S"];
-node[shape=circle] NodeC [label="C"];
+node[shape=circle] NodeF [label="F"];
+node[shape=circle] NodeB [label="B"];
 node[shape=doublecircle] NodeA [label="A"];
-NodeS->NodeA [label="a"];
-NodeS->NodeC [label="c"];
-NodeC->NodeC [label="b"];
+node[shape=circle] NodeD [label="D"];
+node[shape=circle] NodeC [label="C"];
+NodeB->NodeA [label="a"];
+NodeF->NodeD [label="a"];
+NodeC->NodeB [label="b"];
+NodeF->NodeA [label="c"];
+NodeD->NodeC [label="b"];
+NodeF->NodeD [label="b"];
+NodeD->NodeD [label="a"];
+NodeF->NodeB [label="b"];
+NodeD->NodeD [label="b"];
+NodeF->NodeA [label="a"];
+NodeF->NodeC [label="b"];
 }
