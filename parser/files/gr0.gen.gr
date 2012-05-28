@@ -1,1 +1,0 @@
-G1 = ({A,B,C,D,E,F,G},{a,b},A,{B->\|a,A->\|a|aA|aB,E->Eb,F->a})
