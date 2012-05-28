@@ -29,7 +29,16 @@ automata.yy.c:
 	
 all: grammar automata
 	
-clean:
+clean_grammar:
 	-rm -f *.o core
+	-rm -f grammar
+
+clean_automata:
+	-rm -f *.o core
+	_rm -f automata
+clean_all:
+	-rm -f *.o core
+	-rm -f grammar
+	-rm -f automata
 
 #rebuild: clean build
